@@ -75,40 +75,41 @@ export class CreateNewChapterModalComponent extends ConfirmOrCancelModal
     this.allowedBgColors = (
       AppConstants.ALLOWED_THUMBNAIL_BG_COLORS.chapter);
     this.storyUpdateService.addStoryNode(this.story, this.title);
-    }
+  }
 
   updateThumbnailFilename(newThumbnailFilename: string): void {
     this.storyUpdateService.setStoryNodeThumbnailFilename(
       this.story, this.nodeId, newThumbnailFilename);
     this.editableThumbnailFilename = newThumbnailFilename;
-   }
-   updateThumbnailBgColor(newThumbnailBgColor: string): void {
+  }
+
+  updateThumbnailBgColor(newThumbnailBgColor: string): void {
     this.storyUpdateService.setStoryNodeThumbnailBgColor(
       this.story, this.nodeId, newThumbnailBgColor);
     this.editableThumbnailBgColor = newThumbnailBgColor;
-   }
-   updateTitle(): void {
-     this.storyUpdateService.setStoryNodeTitle(
-       this.story, this.nodeId, this.title);
-   }
-   cancel(): void {
-       this.storyUpdateService.deleteStoryNode(this.story, this.nodeId);
-       this.ngbActiveModal.dismiss('cancel');
-   }
- 
-   updateExplorationId(): void {
-       let nodes = this.story.getStoryContents().getNodes();
-       for (var i = 0; i < nodes.length; i++) {
-         if (nodes[i].getExplorationId() === this.explorationId) {
-           this.invalidExpErrorString = (
-             'The given exploration already exists in the story.');
-           this.invalidExpId = true;
-           return;
-         }
-       }
-       if (this.storyEditorStateService.isStoryPublished()) {
-         this.explorationIdValidationService.isExpPublishedAsync(
-           this.explorationId).then(function(expIdIsValid) {
+  }
+  updateTitle(): void {
+    this.storyUpdateService.setStoryNodeTitle(
+      this.story, this.nodeId, this.title);
+  }
+  cancel(): void {
+    this.storyUpdateService.deleteStoryNode(this.story, this.nodeId);
+    this.ngbActiveModal.dismiss('cancel');
+  }
+
+  updateExplorationId(): void {
+    let nodes = this.story.getStoryContents().getNodes();
+    for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].getExplorationId() === this.explorationId) {
+          this.invalidExpErrorString = (
+            'The given exploration already exists in the story.');
+          this.invalidExpId = true;
+          return;
+        }
+      }
+    if (this.storyEditorStateService.isStoryPublished()) {
+      this.explorationIdValidationService.isExpPublishedAsync(
+          this.explorationId).then(function(expIdIsValid) {
            this.expIdIsValid = expIdIsValid;
            if (this.expIdIsValid) {
              this.soryUpdateService.setStoryNodeExplorationId(
@@ -123,32 +124,32 @@ export class CreateNewChapterModalComponent extends ConfirmOrCancelModal
             this.story, this.nodeId, this.explorationId);
           this.ngbActiveModal.close();
         }
-    }
+  }
   
-    resetErrorMsg = function() {
-        this.errorMsg = null;
-        this.invalidExpId = false;
-        this.invalidExpErrorString = 'Please enter a valid exploration id.';
-    }
-  
-    validateExplorationId = function() {
-        return this.validatorsService.isValidExplorationId(
-          this.explorationId, false);
-    }
-  
-    isValid(): boolean {
-        return Boolean(
-          this.title &&
-          this.validatorsService.isValidExplorationId(this.explorationId, false) &&
-          this.editableThumbnailFilename);
-    }
-  
-    save(): void {
-        if (this.nodeTitles.indexOf(this.title) !== -1) {
-          this.errorMsg = 'A chapter with this title already exists';
-          return;
-        }
-        this.updateTitle();
-        this.updateExplorationId();
-    }
+  resetErrorMsg = function() {
+      this.errorMsg = null;
+      this.invalidExpId = false;
+      this.invalidExpErrorString = 'Please enter a valid exploration id.';
+  }
+
+  validateExplorationId = function() {
+      return this.validatorsService.isValidExplorationId(
+        this.explorationId, false);
+  }
+
+  isValid(): boolean {
+      return Boolean(
+        this.title &&
+        this.validatorsService.isValidExplorationId(this.explorationId, false) &&
+        this.editableThumbnailFilename);
+  }
+
+  save(): void {
+      if (this.nodeTitles.indexOf(this.title) !== -1) {
+        this.errorMsg = 'A chapter with this title already exists';
+        return;
+      }
+      this.updateTitle();
+      this.updateExplorationId();
+  }
 }
