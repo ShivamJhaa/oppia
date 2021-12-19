@@ -38,6 +38,7 @@ import {
   TRANSLATION_DATA_FORMAT_SET_OF_NORMALIZED_STRING,
   TRANSLATION_DATA_FORMAT_SET_OF_UNICODE_STRING
 } from 'domain/exploration/WrittenTranslationObjectFactory';
+import { number } from 'mathjs';
 
 const INTERACTION_SPECS = require('interactions/interaction_specs.json');
 
@@ -88,20 +89,23 @@ export class TranslationError {
   templateUrl: './translation-modal.component.html'
 })
 export class TranslationModalComponent {
-  @Input() opportunity: TranslationOpportunity;
-  activeDataFormat: string;
+  // These properties are initialized using Angular lifecycle hooks
+  // and we need to do non-null assertion, for more information see
+  // https://github.com/oppia/oppia/wiki/Guide-on-defining-types#ts-7-1
+  @Input() opportunity!: TranslationOpportunity;
+  activeDataFormat!: string;
   activeWrittenTranslation: string | string[] = '';
-  activeContentType: string;
-  activeRuleDescription: string;
-  uploadingTranslation = false;
-  subheading: string;
-  heading: string;
+  activeContentType!: string;
+  activeRuleDescription!: string;
+  uploadingTranslation: boolean = false;
+  subheading!: string;
+  heading!: string;
   loadingData = true;
   moreAvailable = false;
   textToTranslate: string | string[] = '';
-  languageDescription: string;
-  activeStatus: Status;
-  HTML_SCHEMA: {
+  languageDescription!: string| null;
+  activeStatus!: Status;
+  HTML_SCHEMA!: {
     'type': string;
     'ui_config': UiConfig;
   };
@@ -113,7 +117,7 @@ export class TranslationModalComponent {
     }
   };
   TRANSLATION_TIPS = constants.TRANSLATION_TIPS;
-  activeLanguageCode: string;
+  activeLanguageCode!: string;
   isActiveLanguageReviewer: boolean = false;
   hadCopyParagraphError = false;
   hasImgTextError = false;
@@ -301,7 +305,7 @@ export class TranslationModalComponent {
   }
 
   getFormattedContentType(
-      contentType: string, interactionId: string): string {
+      contentType: string, interactionId?: string): string {
     if (contentType === 'interaction') {
       return interactionId + ' interaction';
     } else if (contentType === 'rule') {
@@ -310,7 +314,7 @@ export class TranslationModalComponent {
     return contentType;
   }
 
-  getRuleDescription(ruleType: string, interactionId: string): string {
+  getRuleDescription(ruleType?: string, interactionId?: string): string {
     if (!ruleType || !interactionId) {
       return '';
     }
@@ -364,7 +368,7 @@ export class TranslationModalComponent {
     if (originalElements.length === 0) {
       return false;
     }
-    const hasMatchingTranslatedElement = element => (
+    const hasMatchingTranslatedElement = (element: string) => (
       translatedElements.includes(element) && originalElements.length > 0 &&
       !mathEquationRegex.test(element));
     return originalElements.some(hasMatchingTranslatedElement);

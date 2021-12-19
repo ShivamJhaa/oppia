@@ -27,7 +27,7 @@ interface Data {
   'target_type': string;
   description: string;
   'target_id': string;
-  'target_version_at_submission': string;
+  'target_version_at_submission': number;
   change: object;
   files?: Record<string, unknown>;
 }
@@ -70,7 +70,7 @@ export class TranslateTextBackendApiService {
     });
   }
   async suggestTranslatedTextAsync(
-      expId: string, expVersion: string, contentId: string, stateName: string,
+      expId: string, expVersion: number, contentId: string, stateName: string,
       languageCode: string, contentHtml: string | string[],
       translationHtml: string | string[], imagesData: ImagesData[],
       dataFormat: string): Promise<unknown> {

@@ -22,7 +22,7 @@ import { Injectable } from '@angular/core';
 import { ImagesData } from 'services/image-local-storage.service';
 
 import { TranslateTextBackendApiService } from './translate-text-backend-api.service';
-import { TranslatableTexts } from 'domain/opportunity/translatable-texts.model';
+import { StateNamesToContentIdMapping, TranslatableTexts } from 'domain/opportunity/translatable-texts.model';
 import {
   TRANSLATION_DATA_FORMAT_SET_OF_NORMALIZED_STRING,
   TRANSLATION_DATA_FORMAT_SET_OF_UNICODE_STRING
@@ -31,12 +31,12 @@ import {
 export interface TranslatableItem {
   translation: string | string[];
   status: Status;
-  text: string | string[];
+  text: string | string[] | null;
   more: boolean;
   dataFormat: string;
   contentType: string;
-  interactionId?: string;
-  ruleType?: string;
+  interactionId?: string | null;
+  ruleType?: string | null;
 }
 
 export type Status = 'pending' | 'submitted';
@@ -50,8 +50,8 @@ export class StateAndContent {
     public translation: string | string[],
     public dataFormat: string,
     public contentType: string,
-    public interactionId?: string,
-    public ruleType?: string
+    public interactionId?: string | null,
+    public ruleType?: string | null
   ) {}
 }
 
@@ -59,27 +59,31 @@ export class StateAndContent {
   providedIn: 'root'
 })
 export class TranslateTextService {
-  STARTING_INDEX = -1;
-  PENDING = 'pending';
-  SUBMITTED = 'submitted';
-  stateWiseContents = {};
-  stateWiseContentIds = {};
-  stateNamesList = [];
-  stateAndContent = [];
-  activeIndex = this.STARTING_INDEX;
-  activeExpId;
-  activeExpVersion;
-  activeContentId;
-  activeStateName: string;
-  activeContentText: string;
-  activeContentStatus: Status;
+  STARTING_INDEX: number = -1;
+  PENDING: Status = 'pending';
+  SUBMITTED: Status = 'submitted';
+  activeIndex: number = this.STARTING_INDEX;
+  stateWiseContents: StateNamesToContentIdMapping = {};
+  stateWiseContentIds: Record<string, string[]> = {};
+  stateNamesList: string[] = [];
+  stateAndContent: StateAndContent[] = [];
+  // These properties are initialized using Angular lifecycle hooks
+  // and we need to do non-null assertion, for more information see
+  // https://github.com/oppia/oppia/wiki/Guide-on-defining-types#ts-7-1
+  activeExpId!: string;
+  activeExpVersion!: number;
+  activeContentStatus!: Status;
+  // These property are set to null during initialisation.
+  activeContentId!: string;
+  activeStateName!: string;
+  activeContentText!: string | string[];
 
   constructor(
     private translateTextBackedApiService:
       TranslateTextBackendApiService
   ) { }
 
-  private _getNextText(): string | string[] {
+  private _getNextText(): string | string[] | null {
     if (this.stateAndContent.length === 0) {
       return null;
     }
@@ -91,7 +95,7 @@ export class TranslateTextService {
     return this.activeContentText;
   }
 
-  private _getPreviousText(): string | string[] {
+  private _getPreviousText(): string | string[] | null {
     if (this.stateAndContent.length === 0 || this.activeIndex <= 0) {
       return null;
     }
@@ -121,10 +125,10 @@ export class TranslateTextService {
   }
 
   private _getUpdatedTextToTranslate(
-      text: string | string[],
+      text: string | string[] | null,
       more: boolean,
       status: Status,
-      translation: string
+      translation: string | string[]
   ): TranslatableItem {
     const {
       dataFormat,
@@ -132,10 +136,10 @@ export class TranslateTextService {
       interactionId,
       ruleType
     }: {
-      dataFormat?: string;
-      contentType?: string;
-      interactionId?: string;
-      ruleType?: string;
+      dataFormat: string;
+      contentType: string;
+      interactionId?: string | null;
+      ruleType?: string | null;
     } = this.stateAndContent[this.activeIndex] || {};
     return {
       text: text,
@@ -154,10 +158,10 @@ export class TranslateTextService {
     this.stateNamesList = [];
     this.stateAndContent = [];
     this.activeIndex = this.STARTING_INDEX;
-    this.activeContentId = null;
-    this.activeStateName = null;
-    this.activeContentText = null;
-    this.activeContentStatus = this.PENDING as Status;
+    this.activeContentId = 'null';
+    this.activeStateName = 'null';
+    this.activeContentText = 'null';
+    this.activeContentStatus = this.PENDING;
     this.activeExpId = expId;
     this.translateTextBackedApiService.getTranslatableTextsAsync(
       expId, languageCode).then((translatableTexts: TranslatableTexts) => {
@@ -177,7 +181,7 @@ export class TranslateTextService {
             new StateAndContent(
               stateName, contentId,
               translatableItem.content,
-              this.PENDING as Status,
+              this.PENDING,
               this._isSetDataFormat(translatableItem.dataFormat) ? [] : '',
               translatableItem.dataFormat,
               translatableItem.contentType,

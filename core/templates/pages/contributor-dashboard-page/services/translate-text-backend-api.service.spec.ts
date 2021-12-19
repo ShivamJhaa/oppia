@@ -66,7 +66,7 @@ describe('TranslateTextBackendApiService', () => {
           },
           stateName2: {contentId3: getTranslatableItem('text3')}
         },
-        version: '1'
+        version: 1
       };
       translateTextBackendApiService.getTranslatableTextsAsync('1', 'en').then(
         successHandler, failHandler
@@ -135,7 +135,7 @@ describe('TranslateTextBackendApiService', () => {
         target_type: 'exploration',
         description: 'Adds translation',
         target_id: 'activeExpId',
-        target_version_at_submission: 'activeExpVersion',
+        target_version_at_submission: 1,
         change: {
           cmd: 'add_written_translation',
           content_id: 'activeContentId',
@@ -152,7 +152,7 @@ describe('TranslateTextBackendApiService', () => {
 
       translateTextBackendApiService.suggestTranslatedTextAsync(
         'activeExpId',
-        'activeExpVersion',
+        1,
         'activeContentId',
         'activeStateName',
         'languageCode',
@@ -177,7 +177,7 @@ describe('TranslateTextBackendApiService', () => {
         Promise.resolve('imageBlob'));
       translateTextBackendApiService.suggestTranslatedTextAsync(
         'activeExpId',
-        'activeExpVersion',
+        1,
         'activeContentId',
         'activeStateName',
         'languageCode',
@@ -228,7 +228,7 @@ describe('TranslateTextBackendApiService', () => {
       );
       translateTextBackendApiService.suggestTranslatedTextAsync(
         'activeExpId',
-        'activeExpVersion',
+        1,
         'activeContentId',
         'activeStateName',
         'languageCode',
@@ -265,7 +265,7 @@ describe('TranslateTextBackendApiService', () => {
         Promise.resolve('imageBlob'));
       translateTextBackendApiService.suggestTranslatedTextAsync(
         'activeExpId',
-        'activeExpVersion',
+        1,
         'activeContentId',
         'activeStateName',
         'languageCode',
@@ -291,7 +291,7 @@ describe('TranslateTextBackendApiService', () => {
       await expectAsync(
         translateTextBackendApiService.suggestTranslatedTextAsync(
           'activeExpId',
-          'activeExpVersion',
+          1,
           'activeContentId',
           'activeStateName',
           'languageCode',
@@ -310,7 +310,7 @@ describe('TranslateTextBackendApiService', () => {
       await expectAsync(
         translateTextBackendApiService.suggestTranslatedTextAsync(
           'activeExpId',
-          'activeExpVersion',
+          1,
           'activeContentId',
           'activeStateName',
           'languageCode',
