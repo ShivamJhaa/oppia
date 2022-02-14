@@ -77,7 +77,7 @@ angular.module('oppia').component('explorationEditorTab', {
   },
   template: require('./exploration-editor-tab.component.html'),
   controller: [
-    '$scope', '$templateCache', '$timeout', 'EditabilityService',
+    '$rootScope', '$scope', '$templateCache', '$timeout', 'EditabilityService',
     'ExplorationCorrectnessFeedbackService', 'ExplorationFeaturesService',
     'ExplorationInitStateNameService', 'ExplorationStatesService',
     'ExplorationWarningsService', 'FocusManagerService', 'GraphDataService',
@@ -87,7 +87,7 @@ angular.module('oppia').component('explorationEditorTab', {
     'StateTutorialFirstTimeService',
     'UserExplorationPermissionsService',
     function(
-        $scope, $templateCache, $timeout, EditabilityService,
+        $rootScope, $scope, $templateCache, $timeout, EditabilityService,
         ExplorationCorrectnessFeedbackService, ExplorationFeaturesService,
         ExplorationInitStateNameService, ExplorationStatesService,
         ExplorationWarningsService, FocusManagerService, GraphDataService,
@@ -264,6 +264,7 @@ angular.module('oppia').component('explorationEditorTab', {
       };
 
       ctrl.saveHints = function(displayedValue) {
+        $rootScope.$applyAsync();
         ExplorationStatesService.saveHints(
           StateEditorService.getActiveStateName(),
           angular.copy(displayedValue));
@@ -343,12 +344,12 @@ angular.module('oppia').component('explorationEditorTab', {
           })
         );
 
-        $scope.$watch(ExplorationStatesService.getStates, function() {
+        ExplorationStatesService.registerOnStatesChangedCallback(() => {
           if (ExplorationStatesService.getStates()) {
             StateEditorService.setStateNames(
               ExplorationStatesService.getStateNames());
           }
-        }, true);
+        });
         ctrl.interactionIsShown = false;
       };
       ctrl.$onDestroy = function() {

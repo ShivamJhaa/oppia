@@ -5,24 +5,46 @@
   </div>
   <div class="form-group oppia-form-group">
     <span>
-      <select class="form-control oppia-form-control" [(ngModel)]="outcome.dest" ng-options="choice.id as choice.text for choice in destChoices" ng-change="onDestSelectorChange()">
+      <select class="form-control oppia-form-control"
+              [(ngModel)]="outcome.dest"
+              (ngModelChange)="onDestSelectorChange()">
+        <option *ngFor="let choice of destinationChoices" [value]="choice.id">{{ choice.text }}</option>
       </select>
     </span>
   </div>
-  <form name="newStateNameForm">
-    <span *ngIf="isCreatingNewState(outcome)">
-      <input type="text" focus-on="newStateNameInputField" name="newStateName" [(ngModel)]="outcome.newStateName" maxlength="{{maxLen}}" class="form-control protractor-test-add-state-input" tabindex="0" aria-invalid="false" ng-pattern="newStateNamePattern" required>
+  <form #newStateNameForm="ngForm">
+    <span *ngIf="isCreatingNewState()">
+      <input class="form-control protractor-test-add-state-input"
+             type="text"
+             name="newStateNameInput"
+             [(ngModel)]="outcomeNewStateName"
+             (ngModelChange)="updateChanges($event)"
+             [oppiaFocusOn]="newStateNameInputField"
+             [attr.maxlength]="maxLen"
+             [pattern]="newStateNamePattern"
+             tabindex="0"
+             [attr.aria-invalid]="false" required>
     </span>
-    <p [hidden]="!newStateNameForm.newStateName.$error.pattern" class="form-text oppia-form-error oppia-form-error-text">Please pick a card name consisting of alphanumeric characters, spaces and/or hyphens.</p>
   </form>
+  <p [hidden]="newStateNameForm.form.valid ||  outcomeNewStateName === undefined" class="form-text oppia-form-error oppia-form-error-text">Please pick a card name consisting of alphanumeric characters, spaces and/or hyphens.</p>
 
   <div *ngIf="isSelfLoop() && canEditRefresherExplorationId" class="oppia-id-text">
     <b>Refresher exploration ID (optional):</b>
-    <input type="text" name="refresherExplorationId" [(ngModel)]="outcome.refresherExplorationId" class="form-control protractor-test-add-refresher-exploration-id" tabindex="0" aria-invalid="false" ng-pattern="globalIdPattern">
+    <input type="text"
+           class="form-control protractor-test-add-refresher-exploration-id"
+           [(ngModel)]="outcome.refresherExplorationId"
+           [pattern]="explorationAndSkillIdPattern"
+           tabindex="0"
+           [attr.aria-invalid]="false">
   </div>
   <div class="oppia-id-text" *ngIf="canAddPrerequisiteSkill">
     <b>Prerequisite skill ID (optional):&nbsp;</b>
-    <input type="text" name="missingPrerequisiteSkillId" [(ngModel)]="outcome.missingPrerequisiteSkillId" class="form-control" tabindex="0" aria-invalid="false" [(ngModel)]-options="{allowInvalid: true}" ng-pattern="explorationAndSkillIdPattern">
+    <input class="form-control"
+           type="text"
+           [(ngModel)]="outcome.missingPrerequisiteSkillId"
+           tabindex="0"
+           [attr.aria-invalid]="false"
+           [ngModelOptions]="{allowInvalid: true}">
     <p class="oppia-prerequisite-explanation-text">
       <i> Mention the skill that this state requires so that a learner who is stuck in the state can quickly learn the
           required material and continue with the exploration.
