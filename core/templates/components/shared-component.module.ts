@@ -95,8 +95,6 @@ import { RatingDisplayComponent } from './ratings/rating-display/rating-display.
 import { SupplementalCardComponent } from 'pages/exploration-player-page/learner-experience/supplemental-card.component';
 import { AddHintModalComponent } from 'pages/exploration-editor-page/editor-tab/templates/modal-templates/add-hint-modal.component';
 import { SmoothHeightAnimatorComponent } from './smooth-height/smooth-height-animator.component';
-<<<<<<< Updated upstream
-=======
 import { QuestionMisconceptionSelectorComponent } from './question-directives/question-misconception-selector/question-misconception-selector.component';
 import { ConversationSkinComponent } from 'pages/exploration-player-page/learner-experience/conversation-skin.component';
 import { RatingsAndRecommendationsComponent } from 'pages/exploration-player-page/learner-experience/ratings-and-recommendations.component';
@@ -121,7 +119,6 @@ import { OutcomeDestinationEditorComponent } from './state-directives/outcome-ed
 import { StateSolutionEditorComponent } from './state-editor/state-solution-editor/state-solution-editor.component';
 import { StateInteractionEditorComponent } from './state-editor/state-interaction-editor/state-interaction-editor.component';
 import { OutcomeEditorComponent } from './state-directives/outcome-editor/outcome-editor.component';
->>>>>>> Stashed changes
 
 // Pipes.
 import { TruncatePipe } from 'filters/string-utility-filters/truncate.pipe';
@@ -198,11 +195,8 @@ import { HybridRouterModuleProvider } from 'hybrid-router-module-provider';
     MultiSelectionFieldComponent,
     OnScreenKeyboardComponent,
     OppiaAngularRootComponent,
-<<<<<<< Updated upstream
-=======
     OutcomeDestinationEditorComponent,
     OutcomeEditorComponent,
->>>>>>> Stashed changes
     OutcomeFeedbackEditorComponent,
     ProfileLinkImageComponent,
     ProfileLinkTextComponent,
@@ -273,12 +267,9 @@ import { HybridRouterModuleProvider } from 'hybrid-router-module-provider';
     TakeBreakModalComponent,
     StateSkillEditorComponent,
     ExplorationEmbedButtonModalComponent,
-<<<<<<< Updated upstream
-=======
     LearnerAnswerInfoCard,
     OutcomeDestinationEditorComponent,
     OutcomeEditorComponent,
->>>>>>> Stashed changes
     OutcomeFeedbackEditorComponent,
     HintAndSolutionButtonsComponent,
     InputResponsePairComponent,
@@ -352,11 +343,8 @@ import { HybridRouterModuleProvider } from 'hybrid-router-module-provider';
     FilterForMatchingSubstringPipe,
     OnScreenKeyboardComponent,
     OppiaAngularRootComponent,
-<<<<<<< Updated upstream
-=======
     OutcomeDestinationEditorComponent,
     OutcomeEditorComponent,
->>>>>>> Stashed changes
     OutcomeFeedbackEditorComponent,
     ProgressNavComponent,
     SearchBarComponent,
