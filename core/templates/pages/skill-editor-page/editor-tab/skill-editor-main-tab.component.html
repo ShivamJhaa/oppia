@@ -21,7 +21,7 @@
       </oppia-skill-rubrics-editor>
     </div>
     <div class="skill-editor-info-container">
-      <div class="oppia-editor-card-section skill-editor-status">
+      <mat-card class="oppia-editor-card-section skill-editor-status">
         <strong class="status-heading">
           Status
         </strong>
@@ -33,8 +33,8 @@
                   [(ngModel)]="topicName"
                   (ngModelChange)="changeSelectedTopic($event)"
                   [disabled]="!isTopicDropdownEnabled()">
-        <option *ngFor="let topic of getAssignedSkillTopicData()" [value]="topic">{{ topic }}</option>
-      </select>
+              <option *ngFor="let topic of getAssignedSkillTopicData()" [value]="topic">{{ topic }}</option>
+          </select>
         </div>
         <div class="status-box" *ngIf="isTopicDropdownEnabled()">
           <strong class="status-key">
@@ -47,8 +47,8 @@
             Unassigned
           </span>
         </div>
-      </div>
-      <div class="skill-editor-helper-box">
+      </mat-card>
+      <mat-card class="skill-editor-helper-box">
         <div class="skill-details-container">
           <div class="misconception-count">
             <span class="count-value" *ngIf="!hasLoadedSkill()"><loading-dots></loading-dots></span>
@@ -65,7 +65,7 @@
             <div class="count-text create-text protractor-test-create-question">Create New Question</div>
           </div>
         </div>
-      </div>
+      </mat-card>
     </div>
   </div>
 </div>
