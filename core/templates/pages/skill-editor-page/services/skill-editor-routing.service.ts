@@ -16,69 +16,76 @@
  * @fileoverview Service that handles routing for the skill editor page.
  */
 
-angular.module('oppia').factory('SkillEditorRoutingService', [
-  '$location', '$rootScope',
-  function(
-      $location, $rootScope) {
-    var MAIN_TAB = 'main';
-    var QUESTIONS_TAB = 'questions';
-    var PREVIEW_TAB = 'preview';
-    var activeTab = MAIN_TAB;
-    var ctrl = this;
-    ctrl.questionIsBeingCreated = false;
-    // When the URL path changes, reroute to the appropriate tab in the
-    // skill editor page.
-    $rootScope.$watch(function() {
-      return $location.path();
-    }, function(newPath, oldPath) {
-      if (newPath === '') {
-        $location.path(oldPath);
-        return;
-      }
-      if (!oldPath) {
-        // This can happen when clicking on links whose href is "#".
-        return;
-      }
+import { Injectable, EventEmitter } from '@angular/core';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { WindowRef } from 'services/contextual/window-ref.service';
 
-      if (newPath === '/') {
-        activeTab = MAIN_TAB;
-      } else if (newPath === '/questions') {
-        activeTab = QUESTIONS_TAB;
-      } else if (newPath === '/preview') {
-        activeTab = PREVIEW_TAB;
-      }
-    });
+@Injectable({
+  providedIn: 'root'
+})
+export class SkillEditorRoutingService {
+  private _MAIN_TAB = 'main';
+  private _QUESTIONS_TAB = 'questions';
+  private _PREVIEW_TAB = 'preview';
+  private _updateViewEventEmitter: EventEmitter<void> = new EventEmitter();
+  private _activeTabName = 'main';
+  questionIsBeingCreated: boolean;
 
-    var SkillEditorRouterService = {
-      getActiveTabName: function() {
-        return activeTab;
-      },
-      getTabStatuses: function() {
-        return activeTab;
-      },
-      navigateToMainTab: function() {
-        $location.path('');
-      },
-      navigateToQuestionsTab: function() {
-        $location.path('/questions');
-      },
-      navigateToPreviewTab: function() {
-        $location.path('/preview');
-      },
-      // To navigate directly to question-editor interface
-      // from skill editor page.
-      creatingNewQuestion: function(editorIsOpen: boolean) {
-        if (editorIsOpen) {
-          ctrl.questionIsBeingCreated = true;
-        } else {
-          ctrl.questionIsBeingCreated = false;
-        }
-      },
-      navigateToQuestionEditor: function() {
-        return ctrl.questionIsBeingCreated;
-      },
-    };
-
-    return SkillEditorRouterService;
+  constructor(
+    private windowRef: WindowRef
+  ) {
+    let currentHash: string = this.windowRef.nativeWindow.location.hash;
+    this._changeTab(currentHash.substring(1, currentHash.length));
   }
-]);
+
+  private _changeTab(newHash: string) {
+    if (newHash === '/questions') {
+      this._activeTabName = this._QUESTIONS_TAB;
+    } else if (newHash === '/preview') {
+      this._activeTabName = this._PREVIEW_TAB;
+    } else {
+      this._activeTabName = this._MAIN_TAB;
+    }
+
+    this.windowRef.nativeWindow.location.hash = newHash;
+    this._updateViewEventEmitter.emit();
+  }
+
+
+  getActiveTabName(): string {
+    return this._activeTabName;
+  }
+
+  getTabStatuses(): string {
+    return this._activeTabName;
+  }
+
+  navigateToMainTab(): void {
+    this._changeTab('');
+  }
+
+  navigateToQuestionsTab(): void {
+    this._changeTab('/questions');
+  }
+
+  navigateToPreviewTab(): void {
+    this._changeTab('/preview');
+  }
+
+  // To navigate directly to question-editor interface
+  // from skill editor page.
+  creatingNewQuestion(editorIsOpen: boolean): void {
+    if (editorIsOpen) {
+      this.questionIsBeingCreated = true;
+    } else {
+      this.questionIsBeingCreated = false;
+    }
+  }
+
+  navigateToQuestionEditor(): boolean {
+    return this.questionIsBeingCreated;
+  }
+}
+
+angular.module('oppia').factory('SkillEditorRoutingService',
+  downgradeInjectable(SkillEditorRoutingService));

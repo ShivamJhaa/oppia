@@ -24,6 +24,7 @@ import { UndoRedoService } from 'domain/editor/undo_redo/undo-redo.service';
 import { Skill } from 'domain/skill/SkillObjectFactory';
 import { PageTitleService } from 'services/page-title.service';
 import { FocusManagerService } from 'services/stateful/focus-manager.service';
+import { SkillEditorRoutingService } from '../services/skill-editor-routing.service';
 import { SkillEditorStateService } from '../services/skill-editor-state.service';
 
 @Component({
@@ -119,7 +120,7 @@ export class SkillEditorMainTabComponent implements OnInit {
   }
 }
 
-angular.module('oppia').directive('oppiaSkillEditorMainTabComponent',
+angular.module('oppia').directive('oppiaSkillEditorMainTab',
 downgradeComponent({
   component: SkillEditorMainTabComponent
 }) as angular.IDirectiveFactory);

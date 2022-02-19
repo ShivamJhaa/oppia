@@ -25,6 +25,7 @@ import { FocusManagerService } from 'services/stateful/focus-manager.service';
 import { SkillEditorMainTabComponent } from './skill-editor-main-tab.component';
 import { SkillEditorStateService } from '../services/skill-editor-state.service';
 import { UndoRedoService } from 'domain/editor/undo_redo/undo-redo.service';
+import { SkillEditorRoutingService } from '../services/skill-editor-routing.service';
 
 class MockNgbModalRef {
   componentInstance: {

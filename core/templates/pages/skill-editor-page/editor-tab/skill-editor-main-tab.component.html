@@ -2,7 +2,7 @@
   <div class="skill-editor-content" *ngIf="hasLoadedSkill()">
     <div class="skill-editor-components-container">
       <p class="topic-dashboard-link">
-        <a [href]="/topics-and-skills-dashboard">
+        <a href="/topics-and-skills-dashboard">
           Back to Topics Dashboard <i class="fa fa-angle-left"></i>
         </a>
         <span>{{ skill.getDescription() }}</span>
@@ -31,7 +31,7 @@
           </strong>
           <select class="form-control"
                   [(ngModel)]="topicName"
-                  (ngModelChange)="changeSelectedTopic(topicName)"
+                  (ngModelChange)="changeSelectedTopic($event)"
                   [disabled]="!isTopicDropdownEnabled()">
         <option *ngFor="let topic of getAssignedSkillTopicData()" [value]="topic">{{ topic }}</option>
       </select>
