@@ -1,0 +1,245 @@
+<div class="skill-editor">
+  <div class="skill-editor-content" *ngIf="hasLoadedSkill()">
+    <div class="skill-editor-components-container">
+      <p class="topic-dashboard-link">
+        <a [href]="/topics-and-skills-dashboard">
+          Back to Topics Dashboard <i class="fa fa-angle-left"></i>
+        </a>
+        <span>{{ skill.getDescription() }}</span>
+      </p>
+
+      <oppia-skill-concept-card-editor>
+      </oppia-skill-concept-card-editor>
+
+      <oppia-skill-misconceptions-editor>
+      </oppia-skill-misconceptions-editor>
+
+      <oppia-skill-prerequisite-skills-editor>
+      </oppia-skill-prerequisite-skills-editor>
+
+      <oppia-skill-rubrics-editor>
+      </oppia-skill-rubrics-editor>
+    </div>
+    <div class="skill-editor-info-container">
+      <div class="oppia-editor-card-section skill-editor-status">
+        <strong class="status-heading">
+          Status
+        </strong>
+        <div class="status-box">
+          <strong class="status-key">
+            Topic:
+          </strong>
+          <select class="form-control"
+                  [(ngModel)]="topicName"
+                  (ngModelChange)="changeSelectedTopic(topicName)"
+                  [disabled]="!isTopicDropdownEnabled()">
+        <option *ngFor="let topic of getAssignedSkillTopicData()" [value]="topic">{{ topic }}</option>
+      </select>
+        </div>
+        <div class="status-box" *ngIf="isTopicDropdownEnabled()">
+          <strong class="status-key">
+            Subtopic:
+          </strong>
+          <span *ngIf="getSubtopicName()" class="status-value">
+            {{ getSubtopicName() }}
+          </span>
+          <span *ngIf="!getSubtopicName()" class="status-value">
+            Unassigned
+          </span>
+        </div>
+      </div>
+      <div class="skill-editor-helper-box">
+        <div class="skill-details-container">
+          <div class="misconception-count">
+            <span class="count-value" *ngIf="!hasLoadedSkill()"><loading-dots></loading-dots></span>
+            <div class="count-value" *ngIf="hasLoadedSkill()">{{ skill.getMisconceptions().length }}</div>
+            <div class="count-text">Misconceptions</div>
+          </div>
+          <div class="example-count">
+            <span class="count-value" *ngIf="!hasLoadedSkill()"><loading-dots></loading-dots></span>
+            <div class="count-value" *ngIf="hasLoadedSkill()">{{ skill.getConceptCard().getWorkedExamples().length }}</div>
+            <div class="count-text">Worked Examples</div>
+          </div>
+          <div class="create-question oppia-autofocus" (click)="createQuestion()" [oppiaFocusOn]="newQuestionBtn">
+            <i class="fa fa-plus-circle"></i>
+            <div class="count-text create-text protractor-test-create-question">Create New Question</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .skill-editor-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .skill-editor-components-container {
+    margin-right: 2%;
+    width: 40%;
+  }
+
+  .skill-editor-info-container {
+    margin-top: 30px;
+    width: 31%;
+  }
+
+  .status-heading {
+    font-size: 22px
+  }
+
+  .status-key {
+    font-size: 18px
+  }
+
+  .status-box {
+    margin: 12px 0;
+  }
+
+  .status-value {
+    font-size: 18px;
+  }
+
+  .topic-dashboard-link {
+    font-weight: bold;
+  }
+
+  .topic-dashboard-link a {
+    margin-left: 1%;
+    text-decoration: none;
+  }
+
+  .skill-details-container {
+    align-items: center;
+    border-radius: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    text-align: center;
+    width: 100%;
+  }
+
+  .misconception-count,
+  .example-count,
+  .create-question {
+    border-right: 2px solid #707070;
+    display: inline-block;
+    width: 33%;
+  }
+
+  .count-value {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .count-text {
+    font-size: 15px;
+  }
+
+  .create-question {
+    border-right: none;
+    cursor: pointer;
+  }
+
+  .create-question i {
+    color: #0b6c63;
+    font-size: 30px;
+  }
+
+  .create-text {
+    color: #0b6c63;
+  }
+  .skill-editor-helper-box {
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #aaaac1;
+    border-radius: 6px;
+    box-shadow: none;
+    height: 110px;
+    justify-content: center;
+    margin: 30px auto 0;
+    width: 97%;
+  }
+  .skill-editor-add-btn {
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  @media screen and (max-width: 1250px) {
+    .skill-editor-components-container {
+      width: 50%;
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    .skill-editor-components-container {
+      margin-right: 0;
+      width: 55%;
+    }
+
+    .skill-editor-info-container {
+      width: 45%;
+    }
+
+    .misconception-count,
+    .example-count,
+    .create-question {
+      height: 80px;
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    .skill-editor-components-container {
+      width: 90%;
+    }
+
+    .skill-editor-info-container {
+      margin-bottom: 15px;
+      margin-top: -18px;
+      width: 92%;
+    }
+
+    .misconception-count,
+    .example-count,
+    .create-question {
+      height: auto;
+    }
+
+    .skill-details-container {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .skill-editor-components-container {
+      width: 100%;
+    }
+
+    .skill-editor-info-container {
+      width: 100%;
+    }
+
+    skill-editor-main-tab {
+      margin-top: 20px;
+    }
+
+    .skill-editor-status {
+      display: none;
+    }
+
+    .skill-editor-helper-box {
+      display: none;
+      margin: 0;
+      width: 100%;
+    }
+
+    .misconception-count,
+    .example-count,
+    .create-question {
+      height: 80px;
+      width: 33%;
+    }
+  }
+</style>
