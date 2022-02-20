@@ -45,14 +45,15 @@ export class StoryEditorNavbarComponent implements OnInit {
   showNavigationOptions: boolean;
   showStoryEditOptions: boolean;
   activeTab: string;
+
   constructor(
-    private storyEditorStateService: StoryEditorStateService,
-    private undoRedoService: UndoRedoService,
-    private storyValidationService: StoryValidationService,
+    private alertsService: AlertsService,
     private editableStoryBackendApiService: EditableStoryBackendApiService,
     private ngbModal: NgbModal,
-    private alertsService: AlertsService,
-    private storyEditorNavigationService: StoryEditorNavigationService
+    private storyEditorNavigationService: StoryEditorNavigationService,
+    private storyEditorStateService: StoryEditorStateService,
+    private storyValidationService: StoryValidationService,
+    private undoRedoService: UndoRedoService,
   ) {}
 
   EDITOR = 'Editor';

@@ -1,4 +1,4 @@
-// Copyright 2018 The Oppia Authors. All Rights Reserved.
+// Copyright 2022 The Oppia Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,12 +13,141 @@
 // limitations under the License.
 
 /**
- * @fileoverview Directive for the navbar of the skill editor.
+ * @fileoverview Component for the navbar of the skill editor.
  */
 
 import { Subscription } from 'rxjs';
 import { SkillEditorSaveModalComponent } from '../modal-templates/skill-editor-save-modal.component';
 import { SavePendingChangesModalComponent } from 'components/save-pending-changes/save-pending-changes-modal.component';
+import { Component } from '@angular/core';
+import { UndoRedoService } from 'domain/editor/undo_redo/undo-redo.service';
+
+@Component({
+  selector: 'oppia-skill-editor-navbar',
+  templateUrl: './skill-editor-navbar.component.html'
+})
+export class SkillEditorNavbarComponent implements OnInit {
+  directiveSubscriptions = new Subscription();
+  ACTIVE_TAB_EDITOR = 'Editor';
+  ACTIVE_TAB_QUESTIONS = 'Questions';
+  ACTIVE_TAB_PREVIEW = 'Preview';
+  showNavigationOptions;
+  activeTab;
+  showSkillEditOptions;
+
+  constructor(
+    private alertsService: AlertsService,
+    private ngbModal: NgbModal,
+    private skillEditorRoutingService: SkillEditorRoutingService,
+    private skillEditorStateService: SkillEditorStateService,
+    private skillUpdateService: SkillUpdateService,
+    private skillEditorStateService: SkillEditorStateService,
+    private undoRedoService: UndoRedoService,
+    private urlService: UrlService,
+  ) {}
+
+  getActiveTabName(): string {
+    return this.skillEditorRoutingService.getActiveTabName();
+  }
+
+  isLoadingSkill(): boolean {
+    return this.skillEditorStateService.isLoadingSkill();
+  }
+
+  isSaveInProgress(): boolean {
+    return this.skillEditorStateService.isSavingSkill();
+  }
+
+  getChangeListCount(): number {
+    return this.undoRedoService.getChangeCount();
+  }
+
+  discardChanges(): void {
+    this.undoRedoService.clearChanges();
+    this.skillEditorStateService.loadSkill(this.urlService.getSkillIdFromUrl());
+  }
+
+  getWarningsCount(): number {
+    return this.skillEditorStateService.getSkillValidationIssues().length;
+  }
+
+  isSkillSaveable(): boolean {
+    return (
+      this.getChangeListCount() > 0 &&
+      this.getWarningsCount() === 0
+    );
+  }
+
+  saveChanges(): void {
+    this.ngbModal.open(SkillEditorSaveModalComponent, {
+      backdrop: 'static',
+    }).result.then(function(commitMessage) {
+      this.skillEditorStateService.saveSkill(commitMessage, () => {
+        this.alertsService.addSuccessMessage('Changes Saved.');
+      });
+    }, () => {
+      // Note to developers:
+      // This callback is triggered when the Cancel button is clicked.
+      // No further action is needed.
+    });
+  }
+
+  toggleNavigationOptions(): void {
+    this.showNavigationOptions = !this.showNavigationOptions;
+  }
+
+  selectMainTab(): void {
+    this.activeTab = this.ACTIVE_TAB_EDITOR;
+    this.skillEditorRoutingService.navigateToMainTab();
+  }
+
+  selectPreviewTab(): void {
+    this.activeTab = this.ACTIVE_TAB_PREVIEW;
+    this.skillEditorRoutingService.navigateToPreviewTab();
+  }
+
+  toggleSkillEditOptions(): void {
+    this.showSkillEditOptions = !this.showSkillEditOptions;
+  }
+
+  selectQuestionsTab(): void {
+    // This check is needed because if a skill has unsaved changes to
+    // misconceptions, then these will be reflected in the questions
+    // created at that time, but if page is refreshed/changes are
+    // discarded, the misconceptions won't be saved, but there will be
+    // some questions with these now non-existent misconceptions.
+    if (this.undoRedoService.getChangeCount() > 0) {
+      const modalRef = this.ngbModal.open(
+        SavePendingChangesModalComponent, {
+          backdrop: true
+        });
+
+      modalRef.componentInstance.body = (
+        'Please save all pending ' +
+        'changes before viewing the questions list.');
+
+      modalRef.result.then(null, function() {
+        // Note to developers:
+        // This callback is triggered when the Cancel button is clicked.
+        // No further action is needed.
+      });
+    } else {
+      this.activeTab = ACTIVE_TAB_QUESTIONS;
+      SkillEditorRoutingService.navigateToQuestionsTab();
+    }
+  };
+
+
+  ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.directiveSubscriptions.unsubscribe();
+  }
+}
+
+angular.module('oppia').directive('oppiaSkillEditorNavbar',
+  downgradeComponent({component: SkillEditorNavbarComponent}));
 
 require(
   'components/common-layout-directives/common-elements/' +
@@ -48,7 +177,7 @@ angular.module('oppia').directive('skillEditorNavbar', [
         'SkillEditorRoutingService', 'SkillEditorStateService',
         'SkillUpdateService', 'UndoRedoService', 'UrlService',
         function(
-            $rootScope, $scope, AlertsService, NgbModal,
+            $rootScope, this, AlertsService, NgbModal,
             SkillEditorRoutingService, SkillEditorStateService,
             SkillUpdateService, UndoRedoService, UrlService) {
           var ctrl = this;
@@ -56,39 +185,39 @@ angular.module('oppia').directive('skillEditorNavbar', [
           var ACTIVE_TAB_EDITOR = 'Editor';
           var ACTIVE_TAB_QUESTIONS = 'Questions';
           var ACTIVE_TAB_PREVIEW = 'Preview';
-          $scope.getActiveTabName = function() {
+          this.getActiveTabName = function() {
             return SkillEditorRoutingService.getActiveTabName();
           };
 
-          $scope.isLoadingSkill = function() {
+          this.isLoadingSkill = function() {
             return SkillEditorStateService.isLoadingSkill();
           };
 
-          $scope.isSaveInProgress = function() {
+          this.isSaveInProgress = function() {
             return SkillEditorStateService.isSavingSkill();
           };
 
-          $scope.getChangeListCount = function() {
+          this.getChangeListCount = function() {
             return UndoRedoService.getChangeCount();
           };
 
-          $scope.discardChanges = function() {
+          this.discardChanges = function() {
             UndoRedoService.clearChanges();
             SkillEditorStateService.loadSkill(UrlService.getSkillIdFromUrl());
           };
 
-          $scope.getWarningsCount = function() {
+          this.getWarningsCount = function() {
             return SkillEditorStateService.getSkillValidationIssues().length;
           };
 
-          $scope.isSkillSaveable = function() {
+          this.isSkillSaveable = function() {
             return (
-              $scope.getChangeListCount() > 0 &&
-              $scope.getWarningsCount() === 0
+              this.getChangeListCount() > 0 &&
+              this.getWarningsCount() === 0
             );
           };
 
-          $scope.saveChanges = function() {
+          this.saveChanges = function() {
             NgbModal.open(SkillEditorSaveModalComponent, {
               backdrop: 'static',
             }).result.then(function(commitMessage) {
@@ -103,21 +232,21 @@ angular.module('oppia').directive('skillEditorNavbar', [
             });
           };
 
-          $scope.toggleNavigationOptions = function() {
-            $scope.showNavigationOptions = !$scope.showNavigationOptions;
+          this.toggleNavigationOptions = function() {
+            this.showNavigationOptions = !$scope.showNavigationOptions;
           };
-          $scope.selectMainTab = function() {
-            $scope.activeTab = ACTIVE_TAB_EDITOR;
+          this.selectMainTab = function() {
+            this.activeTab = ACTIVE_TAB_EDITOR;
             SkillEditorRoutingService.navigateToMainTab();
           };
-          $scope.selectPreviewTab = function() {
-            $scope.activeTab = ACTIVE_TAB_PREVIEW;
+          this.selectPreviewTab = function() {
+            this.activeTab = ACTIVE_TAB_PREVIEW;
             SkillEditorRoutingService.navigateToPreviewTab();
           };
-          $scope.toggleSkillEditOptions = function() {
-            $scope.showSkillEditOptions = !$scope.showSkillEditOptions;
+          this.toggleSkillEditOptions = function() {
+            this.showSkillEditOptions = !$scope.showSkillEditOptions;
           };
-          $scope.selectQuestionsTab = function() {
+          this.selectQuestionsTab = function() {
             // This check is needed because if a skill has unsaved changes to
             // misconceptions, then these will be reflected in the questions
             // created at that time, but if page is refreshed/changes are
@@ -139,13 +268,13 @@ angular.module('oppia').directive('skillEditorNavbar', [
                 // No further action is needed.
               });
             } else {
-              $scope.activeTab = ACTIVE_TAB_QUESTIONS;
+              this.activeTab = ACTIVE_TAB_QUESTIONS;
               SkillEditorRoutingService.navigateToQuestionsTab();
             }
           };
 
           ctrl.$onInit = function() {
-            $scope.activeTab = ACTIVE_TAB_EDITOR;
+            this.activeTab = ACTIVE_TAB_EDITOR;
             ctrl.directiveSubscriptions.add(
               SkillEditorStateService.onSkillChange.subscribe(
                 () => {
@@ -154,7 +283,7 @@ angular.module('oppia').directive('skillEditorNavbar', [
                 }),
               SkillUpdateService.onPrerequisiteSkillChange.subscribe(
                 () => {
-                  $scope.$applyAsync();
+                  this.$applyAsync();
                 }
               )
             );
