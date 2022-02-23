@@ -72,7 +72,7 @@ export class AnswerGroupObjectFactory {
 
   generateRulesFromBackendDict(
       ruleBackendDicts: RuleBackendDict[],
-      interactionId: string | null
+      interactionId: string | undefined
   ): Rule[] {
     return ruleBackendDicts.map(
       ruleBackendDict => this.ruleObjectFactory.createFromBackendDict(
@@ -90,7 +90,7 @@ export class AnswerGroupObjectFactory {
 
   createFromBackendDict(
       answerGroupBackendDict: AnswerGroupBackendDict,
-      interactionId: string | null
+      interactionId: string | undefined
   ): AnswerGroup {
     return new AnswerGroup(
       this.generateRulesFromBackendDict(

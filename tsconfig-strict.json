@@ -814,6 +814,7 @@
     "core/templates/domain/admin/*.ts",
     "core/templates/domain/blog/*.ts",
     "core/templates/domain/blog-admin/*.ts",
+    "core/templates/domain/topic_viewer/*.ts",
     "core/templates/domain/classifier/*.ts",
     "core/templates/domain/classroom/*.ts",
     "core/templates/domain/creator_dashboard/*.ts",

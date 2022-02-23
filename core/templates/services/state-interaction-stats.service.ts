@@ -95,8 +95,15 @@ export class StateInteractionStatsService {
    */
   async computeStatsAsync(
       expId: string, state: State): Promise<StateInteractionStats> {
+    if (state.name === null) {
+      throw new Error('State Name cannot be null');
+    }
     if (this.statsCache.has(state.name)) {
-      return this.statsCache.get(state.name);
+      let statsCacheName = this.statsCache.get(state.name);
+      if (statsCacheName === undefined) {
+        throw new Error('State Name cannot be null');
+      }
+      return statsCacheName;
     }
     const interactionRulesService = (
       this.interactionRulesRegistryService.getRulesServiceByInteractionId(
@@ -116,7 +123,8 @@ export class StateInteractionStatsService {
                 info.addressedInfoIsSupported ?
                 this.answerClassificationService
                   .isClassifiedExplicitlyOrGoesToNewState(
-                    state.name, state, datum.answer, interactionRulesService) :
+                    state.name as string, state, datum.answer,
+                    interactionRulesService) :
                 undefined)
             }) as AnswerData),
             id: info.id,

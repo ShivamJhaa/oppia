@@ -130,7 +130,7 @@ export class InteractionRulesRegistryService {
   }
 
   getRulesServiceByInteractionId(
-      interactionId: string): InteractionRulesService {
+      interactionId: string | undefined): InteractionRulesService {
     if (!interactionId) {
       throw new Error('Interaction ID must not be empty');
     }

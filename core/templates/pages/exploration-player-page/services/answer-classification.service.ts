@@ -68,8 +68,9 @@ export class AnswerClassificationService {
   private classifyAnswer(
       answer: InteractionAnswer,
       answerGroups: AnswerGroup[],
-      defaultOutcome: Outcome,
-      interactionRulesService): AnswerClassificationResult {
+      defaultOutcome: Outcome | null,
+      interactionRulesService: InteractionRulesService
+  ): AnswerClassificationResult {
     // Find the first group that contains a rule which returns true
     // TODO(bhenning): Implement training data classification.
     for (var i = 0; i < answerGroups.length; ++i) {

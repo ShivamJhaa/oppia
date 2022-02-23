@@ -76,13 +76,13 @@ export class RuleObjectFactory {
   }
 
   createFromBackendDict(
-      ruleDict: RuleBackendDict, interactionId: string | null
+      ruleDict: RuleBackendDict, interactionId: string | undefined
   ): Rule {
     let ruleType = ruleDict.rule_type;
     let ruleInputTypes: RuleInputTypes = {};
     let ruleDescription = null;
 
-    if (interactionId !== null) {
+    if (interactionId !== undefined) {
       ruleDescription = INTERACTION_SPECS[
         interactionId].rule_descriptions[ruleType];
     }

@@ -34,7 +34,7 @@ import { State } from 'domain/state/StateObjectFactory';
 export class AnswerStatsEntry {
   constructor(
       public readonly answers: readonly AnswerStats[],
-      public readonly interactionId: string | null) {}
+      public readonly interactionId: string | undefined) {}
 }
 
 @Injectable({
@@ -102,7 +102,11 @@ export class StateTopAnswersStatsService {
     if (!this.hasStateStats(stateName)) {
       throw new Error(stateName + ' does not exist.');
     }
-    return [...this.topAnswersStatsByStateName.get(stateName).answers];
+    const newStateName = this.topAnswersStatsByStateName.get(stateName);
+    if (newStateName === undefined) {
+      throw new Error('Old State Name cannot be undefined');
+    }
+    return [...newStateName.answers];
   }
 
   getUnresolvedStateStats(stateName: string): AnswerStats[] {
@@ -118,7 +122,7 @@ export class StateTopAnswersStatsService {
 
   onStateAdded(stateName: string): void {
     this.topAnswersStatsByStateName.set(
-      stateName, new AnswerStatsEntry([], null));
+      stateName, new AnswerStatsEntry([], undefined));
   }
 
   onStateDeleted(stateName: string): void {
@@ -126,8 +130,11 @@ export class StateTopAnswersStatsService {
   }
 
   onStateRenamed(oldStateName: string, newStateName: string): void {
-    this.topAnswersStatsByStateName.set(
-      newStateName, this.topAnswersStatsByStateName.get(oldStateName));
+    const stateName = this.topAnswersStatsByStateName.get(oldStateName);
+    if (stateName === undefined) {
+      throw new Error('Old State Name cannot be undefined');
+    }
+    this.topAnswersStatsByStateName.set(newStateName, stateName);
     this.topAnswersStatsByStateName.delete(oldStateName);
   }
 
@@ -138,21 +145,29 @@ export class StateTopAnswersStatsService {
   private refreshAddressedInfo(updatedState: State): void {
     const stateName = updatedState.name;
 
+    if (stateName === null) {
+      throw new Error('Updated State Name cannot be null');
+    }
     if (!this.topAnswersStatsByStateName.has(stateName)) {
       throw new Error(stateName + ' does not exist.');
     }
 
     const stateStats = this.topAnswersStatsByStateName.get(stateName);
 
+    if (stateStats === undefined) {
+      throw new Error('Old State Name cannot be undefined');
+    }
     if (stateStats.interactionId !== updatedState.interaction.id) {
       this.topAnswersStatsByStateName.set(
         stateName, new AnswerStatsEntry([], updatedState.interaction.id));
     } else {
       stateStats.answers.forEach(a => a.isAddressed = (
-        this.answerClassificationService.isClassifiedExplicitlyOrGoesToNewState(
-          stateName, updatedState, a.answer,
-          this.interactionRulesRegistryService.getRulesServiceByInteractionId(
-            stateStats.interactionId))));
+        this.answerClassificationService
+          .isClassifiedExplicitlyOrGoesToNewState(
+            stateName, updatedState, a.answer,
+            this.interactionRulesRegistryService
+              .getRulesServiceByInteractionId(
+                stateStats.interactionId))));
     }
   }
 }
