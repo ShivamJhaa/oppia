@@ -16,7 +16,7 @@
  * @fileoverview Directive for the concept card rich-text component.
  */
 
-import { async, ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { CkEditorCopyContentService } from 'components/ck-editor-helpers/ck-editor-copy-content.service';
 import { HtmlEscaperService } from 'services/html-escaper.service';
 import { NoninteractiveSkillreview } from './oppia-noninteractive-skillreview.component';
@@ -44,7 +44,7 @@ describe('NoninteractiveSkillreview', () => {
     };
   }
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [NoninteractiveSkillreview],
       providers: [
@@ -122,15 +122,16 @@ describe('NoninteractiveSkillreview', () => {
 
   it('should close concept card when user clicks the link', fakeAsync(() => {
     spyOn(contextService, 'removeCustomEntityContext');
-    let e = {
-      currentTarget: {
+    let dummyMouseEvent = new MouseEvent('Mouse');
+    spyOnProperty(dummyMouseEvent, 'currentTarget').and.returnValue(
+      {
         offsetParent: {
           dataset: {
             ckeWidgetId: false
           }
         }
       }
-    } as unknown as MouseEvent;
+    );
 
     ckEditorCopyContentService.copyModeActive = false;
     const modalSpy = spyOn(ngbModal, 'open').and.callFake((dlg, opt) => {
@@ -140,7 +141,7 @@ describe('NoninteractiveSkillreview', () => {
           }) as NgbModalRef;
     });
 
-    component.openConceptCard(e);
+    component.openConceptCard(dummyMouseEvent);
     tick();
 
     expect(modalSpy).toHaveBeenCalled();
@@ -149,15 +150,16 @@ describe('NoninteractiveSkillreview', () => {
 
   it('should throw error when modal is closed in a method other than' +
   '\'cancel\', \'escape key press\' or \'backdrop click\'', fakeAsync(() => {
-    let e = {
-      currentTarget: {
+    let dummyMouseEvent = new MouseEvent('Mouse');
+    spyOnProperty(dummyMouseEvent, 'currentTarget').and.returnValue(
+      {
         offsetParent: {
           dataset: {
             ckeWidgetId: false
           }
         }
       }
-    } as unknown as MouseEvent;
+    );
 
     ckEditorCopyContentService.copyModeActive = false;
     spyOn(ngbModal, 'open').and.callFake((dlg, opt) => {
@@ -169,7 +171,7 @@ describe('NoninteractiveSkillreview', () => {
 
     let error;
     try {
-      component.openConceptCard(e);
+      component.openConceptCard(dummyMouseEvent);
       flush();
     } catch (e: unknown) {
       error = e as Error;
@@ -180,19 +182,20 @@ describe('NoninteractiveSkillreview', () => {
 
   it('should not open modal when ck Editor copy mode is active',
     fakeAsync(() => {
-      let e = {
-        currentTarget: {
+      let dummyMouseEvent = new MouseEvent('Mouse');
+      spyOnProperty(dummyMouseEvent, 'currentTarget').and.returnValue(
+        {
           offsetParent: {
             dataset: {
               ckeWidgetId: false
             }
           }
         }
-      } as unknown as MouseEvent;
+      );
       const modalSpy = spyOn(ngbModal, 'open');
       ckEditorCopyContentService.copyModeActive = true;
 
-      component.openConceptCard(e);
+      component.openConceptCard(dummyMouseEvent);
       tick();
 
       expect(modalSpy).not.toHaveBeenCalled();

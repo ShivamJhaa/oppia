@@ -75,10 +75,10 @@ describe('Navigation Service', () => {
   });
 
   it('should close submenu when event has close action type', () => {
-    let mockEvent = {
+    let mockEvent = new KeyboardEvent('keydown', {
       keyCode: 9,
       shiftKey: true
-    } as unknown as KeyboardEvent;
+    });
     let eventsTobeHandled = {
       shiftTab: 'close',
     } as EventToCodes;
@@ -89,10 +89,10 @@ describe('Navigation Service', () => {
   });
 
   it('should throw an error when event has invalid action type', () => {
-    let mockEvent = {
+    let mockEvent = new KeyboardEvent('keydown', {
       keyCode: 9,
       shiftKey: true
-    } as unknown as KeyboardEvent;
+    });
     let eventsTobeHandled = {
       shiftTab: 'invalid'
     } as EventToCodes;

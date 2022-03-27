@@ -65,13 +65,13 @@ interface RteConfig extends CKEDITOR.config {
 })
 export class CkEditor4RteComponent implements AfterViewInit, OnChanges,
     OnDestroy, OnInit {
-  @Input() uiConfig: UiConfig;
-  @Input() value;
+  @Input() uiConfig!: UiConfig;
+  @Input() value!: string;
   @Input() headersEnabled = false;
   @Output() valueChange: EventEmitter<string> = new EventEmitter();
   rteHelperService;
-  ck: CKEDITOR.editor;
-  currentValue: string;
+  ck!: CKEDITOR.editor;
+  currentValue!: string;
   connectedToInternet = true;
   componentsThatRequireInternet: string[] = [];
   subscriptions: Subscription;
@@ -253,8 +253,8 @@ export class CkEditor4RteComponent implements AfterViewInit, OnChanges,
 
   ngAfterViewInit(): void {
     var _RICH_TEXT_COMPONENTS = this.rteHelperService.getRichTextComponents();
-    var names = [];
-    var icons = [];
+    var names: string[] = [];
+    var icons: string[] = [];
     this.componentsThatRequireInternet = [];
 
     _RICH_TEXT_COMPONENTS.forEach((componentDefn) => {
@@ -275,7 +275,8 @@ export class CkEditor4RteComponent implements AfterViewInit, OnChanges,
       }
     });
 
-    var editable = document.querySelectorAll('.oppia-rte-resizer');
+    var editable: NodeListOf<Element> = (
+      document.querySelectorAll('.oppia-rte-resizer'));
     var resize = () => {
       // TODO(#12882): Remove the use of jQuery.
       $('.oppia-rte-resizer').css({
