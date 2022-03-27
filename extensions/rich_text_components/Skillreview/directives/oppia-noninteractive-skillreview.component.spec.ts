@@ -95,15 +95,16 @@ describe('NoninteractiveSkillreview', () => {
 
   it('should open concept card when user clicks the link', () => {
     spyOn(contextService, 'removeCustomEntityContext');
-    let e = {
-      currentTarget: {
+    let dummyMouseEvent = new MouseEvent('Mouse');
+    spyOnProperty(dummyMouseEvent, 'currentTarget').and.returnValue(
+      {
         offsetParent: {
           dataset: {
             ckeWidgetId: false
           }
         }
       }
-    } as unknown as MouseEvent;
+    );
 
     ckEditorCopyContentService.copyModeActive = false;
     const modalSpy = spyOn(ngbModal, 'open').and.callFake((dlg, opt) => {
@@ -113,7 +114,7 @@ describe('NoninteractiveSkillreview', () => {
           }) as NgbModalRef;
     });
 
-    component.openConceptCard(e);
+    component.openConceptCard(dummyMouseEvent);
 
     expect(modalSpy).toHaveBeenCalled();
     expect(contextService.removeCustomEntityContext).not.toHaveBeenCalled();

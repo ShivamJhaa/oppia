@@ -59,10 +59,10 @@ describe('Navigation Service', () => {
   });
 
   it('should open submenu when event has open action type', () => {
-    let mockEvent = {
+    let mockEvent = new KeyboardEvent('keydown', {
       keyCode: 13,
       shiftKey: false
-    } as unknown as KeyboardEvent;
+    });
     let eventsTobeHandled = {
       enter: 'open'
     } as EventToCodes;
