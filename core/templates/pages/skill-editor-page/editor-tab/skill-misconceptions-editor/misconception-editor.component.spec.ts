@@ -20,6 +20,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ConceptCard } from 'domain/skill/ConceptCardObjectFactory';
+import { Misconception } from 'domain/skill/MisconceptionObjectFactory';
 import { SkillUpdateService } from 'domain/skill/skill-update.service';
 import { Skill } from 'domain/skill/SkillObjectFactory';
 import { SkillEditorStateService } from 'pages/skill-editor-page/services/skill-editor-state.service';
@@ -79,7 +80,7 @@ describe('Misconception Editor Component', () => {
       isMandatory(): boolean {
         return false;
       }
-    };
+    } as unknown as Misconception;
     component.ngOnInit();
   });
 

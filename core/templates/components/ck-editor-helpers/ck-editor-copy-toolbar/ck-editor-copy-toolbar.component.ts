@@ -42,13 +42,15 @@ export class CkEditorCopyToolbarComponent {
     if (this.ckEditorCopyContentService.copyModeActive) {
       this.document.body.style.cursor = 'copy';
       this.document.querySelectorAll('.oppia-rte-editor')
-        .forEach((editor: HTMLElement) => {
-          editor.focus();
+        .forEach((editor: Element) => {
+          if (editor instanceof HTMLElement) {
+            editor.focus();
+          }
         });
     } else {
       this.document.body.style.cursor = '';
       this.document.querySelectorAll('.oppia-rte-editor')
-        .forEach((editor: HTMLElement) => {
+        .forEach((editor: Element) => {
           editor.blur();
         });
     }

@@ -21,9 +21,12 @@ from __future__ import annotations
 import collections
 import os
 import re
+import json
 import shutil
 import subprocess
 import sys
+
+from oppia.core import python_utils
 
 from .. import common
 from .. import concurrent_task_utils
@@ -37,6 +40,12 @@ ESPRIMA_PATH = os.path.join(
 sys.path.insert(1, ESPRIMA_PATH)
 
 import esprima  # isort:skip pylint: disable=wrong-import-order, wrong-import-position
+
+FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK_PATH = os.path.join(
+    CURR_DIR, 'scripts', 'linters', 'excluded_unknown_type_files.json')
+
+FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK = json.load(python_utils.open_file(
+    FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK_PATH, 'r'))
 
 COMPILED_TYPESCRIPT_TMP_PATH = 'tmpcompiledjs/'
 
@@ -365,6 +374,48 @@ class JsTsLintChecksManager:
         return concurrent_task_utils.TaskResult(
             name, failed, error_messages, error_messages)
 
+    def _check_unknown_type(self):
+        """Checks if the pattern 'as unknown as X' is used
+        in Typescript files.
+
+        Returns:
+            TaskResult. A TaskResult object representing the result of the lint
+            check.
+        """
+        name = 'Unknown type check'
+        error_messages = []
+        failed = False
+        ts_files_to_check = self.ts_filepaths
+
+        # This pattern is used to match cases like ': unknown'.
+        unknown_type_pattern = r':\ *unknown'
+
+        # # This pattern is used to match cases like 'as unknown as X'.
+        unknown_type_conversion_pattern = r'as\ *unknown'
+
+        for file_path in ts_files_to_check:
+            if file_path in FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK:
+                continue
+
+            file_content = self.file_cache.read(file_path)
+            for line_number, line in enumerate(file_content.split('\n')):
+                if re.findall(unknown_type_conversion_pattern, line):
+                    failed = True
+                    error_message = (
+                        '%s --> as unknown type conversion found in this file. Line no.'
+                        ' %s' % (file_path, line_number + 1))
+                    error_messages.append(error_message)
+
+                if re.findall(unknown_type_pattern, line):
+                    failed = True
+                    error_message = (
+                        '%s --> unknown type found in this file. Line no.'
+                        ' %s' % (file_path, line_number + 1))
+                    error_messages.append(error_message)
+
+        return concurrent_task_utils.TaskResult(
+            name, failed, error_messages, error_messages)
+
     def _check_angular_services_index(self):
         """Finds all @Injectable classes and makes sure that they are added to
             Oppia root and Angular Services Index.
@@ -442,6 +493,7 @@ class JsTsLintChecksManager:
         linter_stdout = []
 
         linter_stdout.append(self._check_constants_declaration())
+        linter_stdout.append(self._check_unknown_type())
         linter_stdout.append(self._check_angular_services_index())
 
         # Clear temp compiled typescipt files.

@@ -86,7 +86,7 @@ import { NoninteractiveMath } from 'rich_text_components/Math/directives/oppia-n
 import { NoninteractiveSkillreview } from 'rich_text_components/Skillreview/directives/oppia-noninteractive-skillreview.component';
 import { NoninteractiveTabs } from 'rich_text_components/Tabs/directives/oppia-noninteractive-tabs.component';
 import { NoninteractiveVideo } from 'rich_text_components/Video/directives/oppia-noninteractive-video.component';
-import { CkEditorInitializerService } from './ck-editor-helpers/ck-editor-4-widgets.initializer';
+import { CkEditorInitializerService, RteHelperService } from './ck-editor-helpers/ck-editor-4-widgets.initializer';
 import { HtmlEscaperService } from 'services/html-escaper.service';
 import { MetaTagCustomizationService } from 'services/contextual/meta-tag-customization.service';
 import { AppConstants } from 'app.constants';
@@ -133,11 +133,11 @@ export class OppiaAngularRootComponent implements AfterViewInit {
   static pageTitleService: PageTitleService;
   static profilePageBackendApiService: ProfilePageBackendApiService;
   static rteElementsAreInitialized: boolean = false;
-  static rteHelperService;
+  static rteHelperService: RteHelperService;
   static ratingComputationService: RatingComputationService;
   static reviewTestBackendApiService: ReviewTestBackendApiService;
   static storyViewerBackendApiService: StoryViewerBackendApiService;
-  static ajsValueProvider: (string, unknown) => void;
+  static ajsValueProvider: (args1: string, args2: unknown) => void;
   static injector: Injector;
 
   constructor(

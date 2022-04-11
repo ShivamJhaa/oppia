@@ -60,7 +60,7 @@ export class NoninteractiveImage implements OnInit, OnChanges {
   @Input() altWithValue: string = '';
   @Input() captionWithValue: string = '';
   filepath: string;
-  imageUrl: SafeResourceUrl | string = '';
+  imageUrl: SafeResourceUrl | null = null;
   imageAltText: string = '';
   imageCaption: string = '';
   loadingIndicatorUrl;
