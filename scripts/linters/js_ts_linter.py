@@ -26,7 +26,6 @@ import shutil
 import subprocess
 import sys
 
-from oppia.core import python_utils
 
 from .. import common
 from .. import concurrent_task_utils
@@ -41,11 +40,11 @@ sys.path.insert(1, ESPRIMA_PATH)
 
 import esprima  # isort:skip pylint: disable=wrong-import-order, wrong-import-position
 
-FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK_PATH = os.path.join(
-    CURR_DIR, 'scripts', 'linters', 'excluded_unknown_type_files.json')
-
-FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK = json.load(python_utils.open_file(
-    FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK_PATH, 'r'))
+FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK = [
+    "oppia-noninteractive-skillreview.component.spec.ts",
+    "svg-editor.component.ts",
+    "svg-editor.component.spec.ts",
+]
 
 COMPILED_TYPESCRIPT_TMP_PATH = 'tmpcompiledjs/'
 
