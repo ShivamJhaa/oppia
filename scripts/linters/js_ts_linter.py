@@ -39,9 +39,12 @@ sys.path.insert(1, ESPRIMA_PATH)
 import esprima  # isort:skip pylint: disable=wrong-import-order, wrong-import-position
 
 FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK = [
-    "oppia-noninteractive-skillreview.component.spec.ts",
-    "svg-editor.component.ts",
-    "svg-editor.component.spec.ts",
+    'oppia-noninteractive-skillreview.component.spec.ts',
+    'svg-editor.component.ts',
+    'svg-editor.component.spec.ts',
+    'ck-editor-4-widgets.initializer.ts',
+    'oppia-angular-root.component.ts',
+    'oppia-interactive-code-repl.component.spec.ts',
 ]
 
 COMPILED_TYPESCRIPT_TMP_PATH = 'tmpcompiledjs/'
@@ -399,8 +402,8 @@ class JsTsLintChecksManager:
                 if re.findall(unknown_type_conversion_pattern, line):
                     failed = True
                     error_message = (
-                        '%s --> as unknown type conversion found in this file. Line no.'
-                        ' %s' % (file_path, line_number + 1))
+                        '%s --> as unknown type conversion found in this file'
+                        'Line no. %s' % (file_path, line_number + 1))
                     error_messages.append(error_message)
 
                 if re.findall(unknown_type_pattern, line):
