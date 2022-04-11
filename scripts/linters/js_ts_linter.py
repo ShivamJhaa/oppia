@@ -39,12 +39,9 @@ sys.path.insert(1, ESPRIMA_PATH)
 import esprima  # isort:skip pylint: disable=wrong-import-order, wrong-import-position
 
 FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK = [
-    'oppia-noninteractive-skillreview.component.spec.ts',
-    'svg-editor.component.ts',
-    'svg-editor.component.spec.ts',
-    'ck-editor-4-widgets.initializer.ts',
-    'oppia-angular-root.component.ts',
-    'oppia-interactive-code-repl.component.spec.ts',
+  'core/templates/components/ck-editor-helpers/ck-editor-4-widgets.initializer.ts',
+  'core/templates/components/oppia-angular-root.component.ts',
+  'extensions/interactions/CodeRepl/directives/oppia-interactive-code-repl.component.spec.ts',
 ]
 
 COMPILED_TYPESCRIPT_TMP_PATH = 'tmpcompiledjs/'
