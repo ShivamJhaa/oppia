@@ -411,7 +411,7 @@ class JsTsLintChecksManager:
                 if re.findall(comment_pattern, line) and unknown_line_no == -1 :
                     unknown_comment_line_no = line_number
 
-                if re.findall(ts_unknown_pattern, line) and line_no == -1 :
+                if re.findall(ts_unknown_pattern, line):
                     unknown_line_no = line_number
 
                 # if re.findall()
