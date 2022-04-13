@@ -82,7 +82,6 @@ describe('Misconception Editor Component', () => {
       }
     // This throws error "This is just an example comment
     // to test the linter check.
-    // @ts-unknown-error.
     } as unknown as Misconception;
     component.ngOnInit();
   });
