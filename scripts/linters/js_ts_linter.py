@@ -393,24 +393,40 @@ class JsTsLintChecksManager:
         # # This pattern is used to match cases like 'as unknown as X'.
         unknown_type_conversion_pattern = r'as\ *unknown'
 
+        unknown_line_no=-1
+        # line_no=-1
+        unknown_comment_line_no = -1
+
+
         for file_path in ts_files_to_check:
             if file_path in FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK:
                 continue
 
             file_content = self.file_cache.read(file_path)
-            previous_line_has_ts_ignore = False
-            previous_line_has_comment = False
-            previous_line_has_comment_with_ts_error = False
+            # previous_line_has_ts_ignore = False
+            # previous_line_has_comment = False
+            # previous_line_has_comment_with_ts_error = False
             for line_number, line in enumerate(file_content.split('\n')):
 
-                previous_line_has_ts_ignore = bool(
-                    re.findall(ts_unknown_pattern, line))
+                if re.findall(comment_pattern, line) and unknown_line_no == -1 :
+                    unknown_comment_line_no = line_number
 
-                if (previous_line_has_ts_ignore and previous_line_has_comment_with_ts_error):
-                    continue
+                if re.findall(ts_unknown_pattern, line) and line_no == -1 :
+                    unknown_line_no = line_number
 
-                if re.findall(unknown_type_conversion_pattern, line):
+                # if re.findall()
+                # previous_line_has_ts_ignore = bool(
+                #     re.findall(ts_unknown_pattern, line))
+
+                # if (previous_line_has_ts_ignore and previous_line_has_comment_with_ts_error):
+                #     continue
+
+                if re.findall(unknown_type_conversion_pattern, line) and (unknown_line_no == unknown_comment_line_no + 1 ) and line_number == unknown_line_no + 1:
                     failed = True
+                    unknown_comment_line_no =-1
+                    unknown_line_no =-1
+                    # unknown_comment_line_no =-1
+
                     error_message = (
                         '%s --> as unknown type conversion found in this file'
                         'Line no. %s' % (file_path, line_number + 1))
@@ -418,17 +434,19 @@ class JsTsLintChecksManager:
 
                 if re.findall(unknown_type_pattern, line):
                     failed = True
+                    unknown_comment_line_no =-1
+                    unknown_line_no =-1
                     error_message = (
                         '%s --> unknown type found in this file. Line no.'
                         ' %s' % (file_path, line_number + 1))
                     error_messages.append(error_message)
                 
-                previous_line_has_comment = bool(
-                        re.findall(comment_pattern, line))
+                # previous_line_has_comment = bool(
+                #         re.findall(comment_pattern, line))
 
-                previous_line_has_comment_with_ts_error = (
-                            previous_line_has_comment_with_ts_error and
-                            previous_line_has_comment)
+                # previous_line_has_comment_with_ts_error = (
+                #             previous_line_has_comment_with_ts_error and
+                #             previous_line_has_comment)
 
         return concurrent_task_utils.TaskResult(
             name, failed, error_messages, error_messages)
