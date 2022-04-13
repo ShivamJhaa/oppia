@@ -387,7 +387,6 @@ class JsTsLintChecksManager:
 
         ts_unknown_pattern = r'@ts-unknown-error'
         comment_pattern = r'^ *// '
-        comment_with_ts_error_pattern = r'^ *// This throws'
         # This pattern is used to match cases like ': unknown'.
         unknown_type_pattern = r':\ *unknown'
 
@@ -412,7 +411,7 @@ class JsTsLintChecksManager:
                     re.findall(
                     unknown_type_conversion_pattern, line) and
                     not previous_line_has_ts_ignore and
-                    not previous_line_has_comment_with_ts_error):
+                    not previous_line_has_comment):
                     failed = True
 
                     error_message = (
@@ -432,10 +431,7 @@ class JsTsLintChecksManager:
                     re.findall(comment_pattern, line))
 
                 previous_line_has_comment_with_ts_error = (
-                    bool(
-                        re.findall(
-                            comment_with_ts_error_pattern, line))
-                    or (
+                   (
                         previous_line_has_comment_with_ts_error and
                         previous_line_has_comment))
 
