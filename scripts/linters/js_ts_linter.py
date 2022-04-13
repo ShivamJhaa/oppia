@@ -408,11 +408,12 @@ class JsTsLintChecksManager:
             # previous_line_has_comment_with_ts_error = False
             for line_number, line in enumerate(file_content.split('\n')):
 
+                if re.findall(ts_unknown_pattern, line):
+                    unknown_line_no = line_number
+                    
                 if re.findall(comment_pattern, line) and unknown_line_no == -1 :
                     unknown_comment_line_no = line_number
 
-                if re.findall(ts_unknown_pattern, line):
-                    unknown_line_no = line_number
 
                 # if re.findall()
                 # previous_line_has_ts_ignore = bool(
