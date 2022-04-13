@@ -80,6 +80,9 @@ describe('Misconception Editor Component', () => {
       isMandatory(): boolean {
         return false;
       }
+    // This throws error "This is just an example comment
+    // to test the linter check.
+    // @ts-unknown-error.
     } as unknown as Misconception;
     component.ngOnInit();
   });
