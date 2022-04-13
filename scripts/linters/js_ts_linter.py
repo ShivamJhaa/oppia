@@ -25,6 +25,8 @@ import shutil
 import subprocess
 import sys
 
+import python_utils
+
 from .. import common
 from .. import concurrent_task_utils
 
@@ -38,11 +40,17 @@ sys.path.insert(1, ESPRIMA_PATH)
 
 import esprima  # isort:skip pylint: disable=wrong-import-order, wrong-import-position
 
-FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK = [
-  'core/templates/components/ck-editor-helpers/ck-editor-4-widgets.initializer.ts',
-  'core/templates/components/oppia-angular-root.component.ts',
-  'extensions/interactions/CodeRepl/directives/oppia-interactive-code-repl.component.spec.ts',
-]
+FILES_EXCLUDED_FROM_ANY_TYPE_CHECK_PATH = os.path.join(
+    os.getcwd(), 'excluded_unknown_type_files.json')
+
+with open (FILES_EXCLUDED_FROM_ANY_TYPE_CHECK_PATH, 'r') as file:
+FILES_EXCLUDED_FROM_ANY_TYPE_CHECK = json.load(file)
+
+# FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK = [
+#   'core/templates/components/ck-editor-helpers/ck-editor-4-widgets.initializer.ts',
+#   'core/templates/components/oppia-angular-root.component.ts',
+#   'extensions/interactions/CodeRepl/directives/oppia-interactive-code-repl.component.spec.ts',
+# ]
 
 COMPILED_TYPESCRIPT_TMP_PATH = 'tmpcompiledjs/'
 
