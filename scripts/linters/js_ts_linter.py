@@ -19,13 +19,12 @@
 from __future__ import annotations
 
 import collections
+import json
 import os
 import re
 import shutil
 import subprocess
 import sys
-
-import python_utils
 
 from .. import common
 from .. import concurrent_task_utils
@@ -44,7 +43,7 @@ FILES_EXCLUDED_FROM_ANY_TYPE_CHECK_PATH = os.path.join(
     os.getcwd(), 'excluded_unknown_type_files.json')
 
 with open (FILES_EXCLUDED_FROM_ANY_TYPE_CHECK_PATH, 'r') as file:
-FILES_EXCLUDED_FROM_ANY_TYPE_CHECK = json.load(file)
+    FILES_EXCLUDED_FROM_ANY_TYPE_CHECK = json.load(file)
 
 # FILES_EXCLUDED_FROM_UNKNOWN_TYPE_CHECK = [
 #   'core/templates/components/ck-editor-helpers/ck-editor-4-widgets.initializer.ts',
