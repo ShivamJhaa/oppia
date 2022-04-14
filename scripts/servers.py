@@ -662,3 +662,36 @@ def managed_protractor_server(
         **kwargs)
     with managed_protractor_proc as proc:
         yield proc
+
+def managed_webdriverio_server(**kwargs):
+    """Returns context manager to start/stop the Protractor server gracefully.
+
+    Args:
+        suite_name: str. The suite name whose tests should be run. If the value
+            is `full`, all tests will run.
+        dev_mode: bool. Whether the test is running on dev_mode.
+        debug_mode: bool. Whether to run the protractor tests in debugging mode.
+            Read the following instructions to learn how to run e2e tests in
+            debugging mode:
+            https://www.protractortest.org/#/debugging#disabled-control-flow.
+        sharding_instances: int. How many sharding instances to be running.
+        **kwargs: dict(str: *). Keyword arguments passed to psutil.Popen.
+
+    Yields:
+        psutil.Process. The protractor process.
+
+    Raises:
+        ValueError. Number of sharding instances are less than 0.
+    """
+
+    webdriver_args = [
+        'npx', 'wdio', 'run', './wdio.conf.js'
+    ]
+
+    # OK to use shell=True here because we are passing string literals and
+    # constants, so there is no risk of a shell-injection attack.
+    managed_protractor_proc = managed_process(
+        webdriver_args, human_readable_name='Webdriver Server', shell=True,
+        **kwargs)
+    with managed_protractor_proc as proc:
+        yield proc

@@ -387,6 +387,7 @@ class JsTsLintChecksManager:
 
         ts_unknown_pattern = r'@ts-unknown-error'
         comment_pattern = r'^ *// '
+
         # This pattern is used to match cases like ': unknown'.
         unknown_type_pattern = r':\ *unknown'
 
