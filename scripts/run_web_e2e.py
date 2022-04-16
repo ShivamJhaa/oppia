@@ -264,6 +264,9 @@ def run_tests(args):
             chrome_version=args.chrome_driver_version))
 
         proc = stack.enter_context(servers.managed_webdriverio_server(
+            dev_mode=dev_mode,
+            debug_mode=args.debug_mode,
+            sharding_instances=args.sharding_instances,
             stdout=subprocess.PIPE))
 
         print(

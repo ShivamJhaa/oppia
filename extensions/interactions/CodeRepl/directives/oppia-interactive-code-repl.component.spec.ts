@@ -211,7 +211,7 @@ describe('InteractiveCodeReplComponent', () => {
     // The values cannot be tested since all the variables are private in the
     // editorOptions Object. Therefore, the arguments passed to various
     // functions tested instead.
-    let cm: CodeMirror.Editor = {
+    let cm = {
       replaceSelection: (spaces) => {
         expect(spaces).toBe('  ');
         expect(spaces.length).toBe(2);
@@ -233,7 +233,7 @@ describe('InteractiveCodeReplComponent', () => {
           return 2;
         }
       }
-    };
+    } as unknown as CodeMirror.Editor;
 
     component.editorOptions.extraKeys.Tab(cm);
   });

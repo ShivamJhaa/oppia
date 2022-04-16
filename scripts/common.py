@@ -28,6 +28,7 @@ import socket
 import subprocess
 import sys
 import time
+from tkinter import W
 
 from core import constants
 from core import utils
@@ -182,6 +183,9 @@ PROTRACTOR_BIN_PATH = (
     os.path.join(NODE_MODULES_PATH, 'protractor', 'bin', 'protractor'))
 PROTRACTOR_CONFIG_FILE_PATH = (
     os.path.join('core', 'tests', 'protractor.conf.js'))
+WEBDRIVER_CONFIG_FILE_PATH = (
+    os.path.join('core', 'tests', 'wdio.conf.js')
+)
 
 DIRS_TO_ADD_TO_SYS_PATH = [
     GOOGLE_APP_ENGINE_SDK_HOME,

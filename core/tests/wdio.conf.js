@@ -1,3 +1,17 @@
+var suites = {
+    // The tests on Travis are run individually to parallelize
+    // them. Therefore, we mention the complete directory
+    // in 'full'.
+    full: [
+      'webdriverio/*.js',
+      'webdriverio_desktop/*.js'
+    ],
+
+    users: [
+      'webdriverio_desktop/userJourneys.js',
+    ],
+  };
+
 exports.config = {
     //
     // ====================
@@ -20,9 +34,7 @@ exports.config = {
     // then the current working directory is where your `package.json` resides, so `wdio`
     // will be called from there.
     //
-    specs: [
-        './tests/*.js'
-    ],
+    specs: suites,
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
@@ -135,7 +147,6 @@ exports.config = {
     reporters: ['spec'],
 
 
-    
     //
     // Options to be passed to Jasmine.
     jasmineOpts: {

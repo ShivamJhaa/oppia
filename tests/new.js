@@ -11,5 +11,6 @@ describe('my awesome website', () => {
     await expect(browser).toHaveTitle(
       'WebdriverIO · Next-gen browser and mobile' +
       'automation test framework for Node.js | WebdriverIO');
+    browser.end();
   });
 });

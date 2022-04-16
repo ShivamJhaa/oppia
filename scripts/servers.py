@@ -663,7 +663,8 @@ def managed_protractor_server(
     with managed_protractor_proc as proc:
         yield proc
 
-def managed_webdriverio_server(**kwargs):
+def managed_webdriverio_server(dev_mode=True, debug_mode=False,
+        sharding_instances=1, **kwargs):
     """Returns context manager to start/stop the Protractor server gracefully.
 
     Args:
@@ -685,13 +686,18 @@ def managed_webdriverio_server(**kwargs):
     """
 
     webdriver_args = [
-        'npx', 'wdio', 'run', './wdio.conf.js'
+        common.NODE_BIN_PATH,
+        # This flag ensures tests fail if the `waitFor()` calls time out.
+        '--unhandled-rejections=strict',
+        common.PROTRACTOR_BIN_PATH, common.PROTRACTOR_CONFIG_FILE_PATH,
+        '--params.devMode=%s' % dev_mode,
+        '--suite'
     ]
 
     # OK to use shell=True here because we are passing string literals and
     # constants, so there is no risk of a shell-injection attack.
-    managed_protractor_proc = managed_process(
+    managed_webdriver_proc = managed_process(
         webdriver_args, human_readable_name='Webdriver Server', shell=True,
         **kwargs)
-    with managed_protractor_proc as proc:
+    with managed_webdriver_proc as proc:
         yield proc
