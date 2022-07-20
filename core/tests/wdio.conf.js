@@ -15,11 +15,6 @@ var chromeVersion = (args[0] == 'DEBUG=true') ? args[6] : args[5];
 var chromedriverPath =
 './node_modules/webdriver-manager/selenium/chromedriver_' + chromeVersion;
 
-var spw = null;
-var vidPath = '';
-// Enable ALL_VIDEOS if you want success videos to be saved.
-const ALL_VIDEOS = false;
-
 
 var suites = {
   full: [
@@ -183,6 +178,75 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
   onPrepare: function(config, capabilities) {
+    var spw = null;
+    var vidPath = '';
+    // Enable ALL_VIDEOS if you want success videos to be saved.
+    const ALL_VIDEOS = false;
+
+    // Only running video recorder on Github Actions, since running it on
+    // CicleCI causes RAM issues (meaning very high flakiness).
+
+    if (process.env.GITHUB_ACTIONS &&
+       process.env.VIDEO_RECORDING_IS_ENABLED == 1) {
+      jasmine.getEnv().addReporter({
+        specStarted: function(result) {
+          let ffmpegArgs = [
+            '-y',
+            '-r', '30',
+            '-f', 'x11grab',
+            '-s', '1285x1000',
+            '-i', process.env.DISPLAY,
+            '-g', '300',
+            '-loglevel', '16',
+          ];
+          const uniqueString = Math.random().toString(36).substring(2,8);
+          var name = uniqueString + '.mp4';
+          var dirPath = path.resolve(
+            '__dirname', '..', '..', 'webdriverio-video/');
+          try {
+            fs.mkdirSync(dirPath, { recursive: true });
+          } catch (err) {}
+          vidPath = path.resolve(dirPath, name);
+          // eslint-disable-next-line no-console
+          console.log(
+            'Test name: ' + result.fullName + ' has video path ' + vidPath);
+          ffmpegArgs.push(vidPath);
+          spw = childProcess.spawn('ffmpeg', ffmpegArgs);
+          spw.on(
+            'message', (message) => {
+              // eslint-disable-next-line no-console
+              console.log(`ffmpeg stdout: ${message}`);
+            });
+          spw.on(
+            'error', (errorMessage) => {
+              console.error(`ffmpeg stderr: ${errorMessage}`);
+            });
+          spw.on(
+            'close', (code) => {
+              // eslint-disable-next-line no-console
+              console.log(`ffmpeg exited with code ${code}`);
+            });
+        },
+        specDone: function(result) {
+          spw.kill();
+          if (
+            result.status == 'passed' &&
+            !ALL_VIDEOS && fs.existsSync(vidPath)) {
+            fs.unlinkSync(vidPath);
+            // eslint-disable-next-line no-console
+            console.log(
+              `Video for test: ${result.fullName}` +
+              'was deleted successfully (test passed).');
+          }
+        },
+      });
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(
+        'Videos will not be recorded for this suite either because videos' +
+        ' have been disabled for it (using environment variables) or' +
+        ' because it\'s on CircleCI');
+    }
   },
   /**
    * Gets executed before test execution begins. At this point you can access
@@ -193,42 +257,42 @@ exports.config = {
    * @param {Object}         browser instance of created browser/device session
    */
   before: function() {
-    // Only running video recorder on Github Actions, since running it on
-    // CicleCI causes RAM issues (meaning very high flakiness).
+    // // Only running video recorder on Github Actions, since running it on
+    // // CicleCI causes RAM issues (meaning very high flakiness).
 
-    if (process.env.GITHUB_ACTIONS &&
-      process.env.VIDEO_RECORDING_IS_ENABLED === 1) {
-      let ffmpegArgs = [
-        '-y',
-        '-r', '30',
-        '-f', 'x11grab',
-        '-s', '1285x1000',
-        '-i', process.env.DISPLAY,
-        '-g', '300',
-        '-loglevel', '16',
-      ];
-      const uniqueString = Math.random().toString(36).substring(2, 8);
-      var name = uniqueString + '.mp4';
-      var dirPath = path.resolve(
-        '__dirname', '..', '..', 'webdriverio-video/');
-      try {
-        fs.mkdirSync(dirPath, { recursive: true });
-      } catch (err) {}
-      vidPath = path.resolve(dirPath, name);
-      ffmpegArgs.push(vidPath);
-      spw = childProcess.spawn('ffmpeg', ffmpegArgs);
-      spw.on('message', (message) => {
-        // eslint-disable-next-line no-console
-        console.log(`ffmpeg stdout: ${message}`);
-      });
-      spw.on('error', (errorMessage) => {
-        console.error(`ffmpeg stderr: ${errorMessage}`);
-      });
-      spw.on('close', (code) => {
-        // eslint-disable-next-line no-console
-        console.log(`ffmpeg exited with code ${code}`);
-      });
-    }
+    // if (process.env.GITHUB_ACTIONS &&
+    //   process.env.VIDEO_RECORDING_IS_ENABLED === 1) {
+    //   let ffmpegArgs = [
+    //     '-y',
+    //     '-r', '30',
+    //     '-f', 'x11grab',
+    //     '-s', '1285x1000',
+    //     '-i', process.env.DISPLAY,
+    //     '-g', '300',
+    //     '-loglevel', '16',
+    //   ];
+    //   const uniqueString = Math.random().toString(36).substring(2, 8);
+    //   var name = uniqueString + '.mp4';
+    //   var dirPath = path.resolve(
+    //     '__dirname', '..', '..', 'webdriverio-video/');
+    //   try {
+    //     fs.mkdirSync(dirPath, { recursive: true });
+    //   } catch (err) {}
+    //   vidPath = path.resolve(dirPath, name);
+    //   ffmpegArgs.push(vidPath);
+    //   spw = childProcess.spawn('ffmpeg', ffmpegArgs);
+    //   spw.on('message', (message) => {
+    //     // eslint-disable-next-line no-console
+    //     console.log(`ffmpeg stdout: ${message}`);
+    //   });
+    //   spw.on('error', (errorMessage) => {
+    //     console.error(`ffmpeg stderr: ${errorMessage}`);
+    //   });
+    //   spw.on('close', (code) => {
+    //     // eslint-disable-next-line no-console
+    //     console.log(`ffmpeg exited with code ${code}`);
+    //   });
+    // }
     // Set a wide enough window size for the navbar in the library pages to
     // display fully.
     browser.setWindowSize(1285, 1000);
@@ -280,13 +344,13 @@ exports.config = {
     * @param {Array.<String>} specs List of spec file paths that ran
     */
   after: function(result, capabilities, specs) {
-    spw.kill();
-    if (result === 0 && !ALL_VIDEOS && fs.existsSync(vidPath)) {
-      fs.unlinkSync(vidPath);
-      // eslint-disable-next-line no-console
-      console.log(
-        `Video for test: ${specs}` +
-        'was deleted successfully (test passed).');
-    }
+    // spw.kill();
+    // if (result === 0 && !ALL_VIDEOS && fs.existsSync(vidPath)) {
+    //   fs.unlinkSync(vidPath);
+    //   // eslint-disable-next-line no-console
+    //   console.log(
+    //     `Video for test: ${specs}` +
+    //     'was deleted successfully (test passed).');
+    // }
   },
 };
