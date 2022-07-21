@@ -52,12 +52,8 @@ var urlToBe = async function(url) {
  * @param {string} errorMessage - Error message when element is not clickable.
  */
 var elementToBeClickable = async function(element, errorMessage) {
-  await browser.waitUntil(
-    await until.elementToBeClickable(element),
-    {
-      timeout: DEFAULT_WAIT_TIME_MSECS,
-      timeoutMsg: errorMessage
-    });
+  await element.waitForClickable({
+    timeout: DEFAULT_WAIT_TIME_MSECS, timeoutMsg: errorMessage });
 };
 
 /**
@@ -66,25 +62,19 @@ var elementToBeClickable = async function(element, errorMessage) {
  * @param {string} errorMessage - Error message when element is still visible.
  */
 var invisibilityOf = async function(element, errorMessage) {
-  await browser.waitUntil(
-    await until.invisibilityOf(element),
-    {
-      timeout: DEFAULT_WAIT_TIME_MSECS,
-      timeoutMsg: errorMessage
-    });
+  await element.waitForExist({
+    timeout: DEFAULT_WAIT_TIME_MSECS, reverse: true,
+    timeoutMsg: errorMessage });
 };
 
 /**
  * Consider adding this method after each browser.url() call.
  */
 var pageToFullyLoad = async function() {
-  var loadingMessage = $('.e2e-test-loading-fullpage');
-  await browser.waitUntil(
-    await until.invisibilityOf(loadingMessage),
-    {
-      timeout: 15000,
-      timeoutMsg: 'Page takes more than 15 secs to load'
-    });
+  var loadingMessage = await $('.e2e-test-loading-fullpage');
+  await loadingMessage.waitForExist({
+    timeout: 15000, reverse: true,
+    timeoutMsg: errorMessage });
 };
 
 /**
@@ -122,12 +112,8 @@ var presenceOf = async function(element, errorMessage) {
  * @param {string} errorMessage - Error message when element is invisible.
  */
 var visibilityOf = async function(element, errorMessage) {
-  await browser.waitUntil(
-    await until.visibilityOf(element),
-    {
-      timeout: DEFAULT_WAIT_TIME_MSECS,
-      timeoutMsg: errorMessage
-    });
+  await element.waitForExist({
+    timeout: DEFAULT_WAIT_TIME_MSECS, timeoutMsg: errorMessage, });
 };
 
 /**
