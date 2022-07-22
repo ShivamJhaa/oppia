@@ -24,6 +24,7 @@ var interactions = require('../../../extensions/interactions/webdriverio.js');
 
 var ExplorationPlayerPage = function() {
   var conversationInput = $('.e2e-test-conversation-input');
+  var conversationContentElement = $('.e2e-test-conversation-content');
   var conversationContentSelector = function() {
     return $$('.e2e-test-conversation-content');
   };
@@ -44,6 +45,8 @@ var ExplorationPlayerPage = function() {
   //   handler.readItalicText('slanted');
   // can then be sent.
   this.expectContentToMatch = async function(richTextInstructions) {
+    await waitFor.visibilityOf(
+      conversationContentElement, 'Conversation not visible');
     var conversationContent = await conversationContentSelector();
     var lastElement = conversationContent.length - 1;
     await waitFor.visibilityOf(

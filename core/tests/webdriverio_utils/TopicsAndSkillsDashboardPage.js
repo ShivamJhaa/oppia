@@ -23,6 +23,7 @@ var workflow = require('./workflow.js');
 var general = require('../webdriverio_utils/general.js');
 
 var TopicsAndSkillsDashboardPage = function() {
+  var assignSkillToTopicButton = $('.e2e-test-assign-skill-to-topic-button');
   var assignSkillToTopicButtonsSelector = function() {
     return $$('.e2e-test-assign-skill-to-topic-button');
   };
@@ -57,6 +58,7 @@ var TopicsAndSkillsDashboardPage = function() {
     return $$('.e2e-test-topic-edit-box');
   };
   var topicFilterKeywordField = $('.e2e-test-select-keyword-dropdown');
+  var topicsListItem = $('.e2e-test-topics-list-item');
   var topicsListItemsSelector = function() {
     return $$('.e2e-test-topics-list-item');
   };
@@ -97,6 +99,8 @@ var TopicsAndSkillsDashboardPage = function() {
   this.waitForTopicsToLoad = async function() {
     await waitFor.visibilityOf(
       topicsTable, 'Topics table taking too long to appear');
+    await waitFor.visibilityOf(
+      topicsListItem, 'Topics list taking too long to appear');
     var topicsListItems = await topicsListItemsSelector();
     await waitFor.visibilityOf(
       topicsListItems[0], 'Topics list taking too long to appear');
@@ -128,6 +132,9 @@ var TopicsAndSkillsDashboardPage = function() {
   this.assignSkillToTopic = async function(skillName, topicName) {
     await this.waitForSkillsToLoad();
     await this.searchSkillByName(skillName);
+    await waitFor.visibilityOf(
+      assignSkillToTopicButton,
+      'Assign skill to topic buttons taking too long to appear');
     var assignSkillToTopicButtons = await assignSkillToTopicButtonsSelector();
     await waitFor.visibilityOf(
       assignSkillToTopicButtons[0],

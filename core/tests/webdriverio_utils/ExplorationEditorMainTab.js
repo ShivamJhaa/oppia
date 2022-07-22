@@ -272,8 +272,9 @@ var ExplorationEditorMainTab = function() {
       if (responseNum === 'default') {
         headerElem = defaultResponseTab;
       } else {
+        var responseTabElement = $('.e2e-test-response-tab');
+        await waitFor.visibilityOf(responseTabElement);
         var responseTab = await $$('.e2e-test-response-tab');
-        await waitFor.visibilityOf(responseTab[0]);
         headerElem = responseTab[responseNum];
       }
 
@@ -808,11 +809,13 @@ var ExplorationEditorMainTab = function() {
   this.deleteState = async function(stateName) {
     await action.waitForAutosave();
     await general.scrollToTop();
+    var nodeElements = await explorationGraph.$(
+      `.e2e-test-node=${stateName}`);
+    await waitFor.visibilityOf(
+      nodeElements,
+      'State ' + stateName + ' takes too long to appear or does not exist');
     var nodeElement = await explorationGraph.$$(
       `.e2e-test-node=${stateName}`)[0];
-    await waitFor.visibilityOf(
-      nodeElement,
-      'State ' + stateName + ' takes too long to appear or does not exist');
     var deleteNode = nodeElement.$(deleteNodeLocator);
     await action.click('Delete Node', deleteNode);
 

@@ -68,6 +68,7 @@ var TopicEditorPage = function() {
     '.e2e-test-topic-page-title-fragment-field');
   var topicPageTitleFragmentLabel = $(
     '.e2e-test-topic-page-title-fragment-label');
+  var uncategorizedSkillElement = $('.e2e-test-uncategorized-skill-card');
   var uncategorizedSkillsSelector = function() {
     return $$('.e2e-test-uncategorized-skill-card');
   };
@@ -182,10 +183,10 @@ var TopicEditorPage = function() {
   };
 
   this.dragSkillToSubtopic = async function(skillDescription, subtopicIndex) {
-    var uncategorizedSkills = await uncategorizedSkillsSelector();
     await waitFor.visibilityOf(
-      uncategorizedSkills[0],
+      uncategorizedSkillElement,
       'Uncategorized skills taking too long to appear.');
+    var uncategorizedSkills = await uncategorizedSkillsSelector();
     var subtopicColumns = await subtopicColumnsSelector();
     var target = subtopicColumns[subtopicIndex];
     var uncategorizedSkillIndex = -1;
@@ -245,10 +246,10 @@ var TopicEditorPage = function() {
   };
 
   this.expectUncategorizedSkillsToBe = async function(skillDescriptions) {
-    var uncategorizedSkills = await uncategorizedSkillsSelector();
     await waitFor.visibilityOf(
-      uncategorizedSkills[0],
+      uncategorizedSkillElement,
       'Uncategorized skills taking too long to appear.');
+    var uncategorizedSkills = await uncategorizedSkillsSelector();
 
     for (var i = 0; i < uncategorizedSkills.length; i++) {
       var uncategorizedSkill = uncategorizedSkills[i];

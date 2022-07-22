@@ -25,9 +25,6 @@ var LibraryPage = function() {
 
   var addToPlayLaterListButton = $('.e2e-test-add-to-playlist-btn');
   var allCollectionSummaryTile = $('.e2e-test- collection-summary-tile');
-  var allCollectionSummaryTile = $('.e2e-test-collection-summary-tile');
-  var allExplorationSummaryTile = $('.e2e-test-exp-summary-tile');
-  var allExplorationSummaryTile = $('.e2e-test-exp-summary-tile');
   var expHoverElement = $('.e2e-test-exploration-dashboard-card');
   var mainHeader = $('.e2e-test-library-main-header');
   var searchButton = $('.e2e-test-search-button');
@@ -88,14 +85,16 @@ var LibraryPage = function() {
 
   this.playExploration = async function(explorationName) {
     await waitFor.pageToFullyLoad();
-    var allExplorationSummaryTile = await $$('.e2e-test-exp-summary-tile');
+    var allExplorationSummaryTile = $('.e2e-test-exp-summary-tile');
     await waitFor.visibilityOf(
-      allExplorationSummaryTile[0],
+      allExplorationSummaryTile,
       'Library Page does not have any explorations');
 
-    var explorationCard = await allExplorationsTitled(explorationName)[0];
+    var allExplorationsTitle = $(
+      `.e2e-test-exp-summary-tile-title=${explorationName}`);
     await waitFor.visibilityOf(
-      explorationCard, 'Unable to find exploration ' + explorationName);
+      allExplorationsTitle, 'Unable to find exploration ' + explorationName);
+    var explorationCard = await allExplorationsTitled(explorationName)[0];
     // The Exploration summary card is masked by a dummy element. Therefore, a
     // Javascript click is used.
     await action.click('Exploration Card', explorationCard, true);
@@ -117,10 +116,12 @@ var LibraryPage = function() {
     await waitFor.visibilityOf(
       allCollectionSummaryTile,
       'Library Page does not have any collections');
-    var collectionCard = await allCollectionsTitled(collectionName)[0];
+    var allCollectionsTitle = $(
+      `.e2e-test-collection-summary-tile-title=${collectionName}`);
     await waitFor.visibilityOf(
-      collectionCard,
+      allCollectionsTitle,
       'Unable to find collection ' + collectionName);
+    var collectionCard = await allCollectionsTitled(collectionName)[0];
     // The Collection summary card is masked by a dummy element. Therefore, a
     // Javascript click is used.
     await action.click('Collection Card', collectionCard, true);
