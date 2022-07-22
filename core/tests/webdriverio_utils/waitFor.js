@@ -74,7 +74,7 @@ var pageToFullyLoad = async function() {
   var loadingMessage = await $('.e2e-test-loading-fullpage');
   await loadingMessage.waitForExist({
     timeout: 15000, reverse: true,
-    timeoutMsg: errorMessage });
+    timeoutMsg: 'Pages takes more than 15 sec to load' });
 };
 
 /**
