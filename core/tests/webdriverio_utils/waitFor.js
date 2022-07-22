@@ -84,12 +84,12 @@ var pageToFullyLoad = async function() {
  *                                provided text.
  */
 var textToBePresentInElement = async function(element, text, errorMessage) {
-  await browser.waitUntil(
-    await until.textToBePresentInElement(element, text),
-    {
-      timeout: DEFAULT_WAIT_TIME_MSECS,
-      timeoutMsg: errorMessage
-    });
+  await element.waitUntil(async function() {
+    return (await this.getText()) === text;
+  }, {
+    timeout: DEFAULT_WAIT_TIME_MSECS,
+    timeoutMsg: errorMessage
+  });
 };
 
 /**
@@ -98,12 +98,8 @@ var textToBePresentInElement = async function(element, text, errorMessage) {
  * @param {string} errorMessage - Error message when element is not present.
  */
 var presenceOf = async function(element, errorMessage) {
-  await browser.waitUntil(
-    await until.presenceOf(element),
-    {
-      timeout: DEFAULT_WAIT_TIME_MSECS,
-      timeoutMsg: errorMessage
-    });
+  await element.waitForDisplayed({
+    timeout: DEFAULT_WAIT_TIME_MSECS, timeoutMsg: errorMessage, });
 };
 
 /**
