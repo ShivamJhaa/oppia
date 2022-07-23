@@ -53,7 +53,9 @@ var urlToBe = async function(url) {
  */
 var elementToBeClickable = async function(element, errorMessage) {
   await element.waitForClickable({
-    timeout: DEFAULT_WAIT_TIME_MSECS, timeoutMsg: errorMessage });
+    timeout: DEFAULT_WAIT_TIME_MSECS,
+    timeoutMsg: errorMessage
+  });
 };
 
 /**
@@ -63,8 +65,10 @@ var elementToBeClickable = async function(element, errorMessage) {
  */
 var invisibilityOf = async function(element, errorMessage) {
   await element.waitForExist({
-    timeout: DEFAULT_WAIT_TIME_MSECS, reverse: true,
-    timeoutMsg: errorMessage });
+    timeout: DEFAULT_WAIT_TIME_MSECS,
+    reverse: true,
+    timeoutMsg: errorMessage
+  });
 };
 
 /**
@@ -84,12 +88,12 @@ var pageToFullyLoad = async function() {
  *                                provided text.
  */
 var textToBePresentInElement = async function(element, text, errorMessage) {
-  await element.waitUntil(async function() {
-    return (await this.getText()) === text;
-  }, {
-    timeout: DEFAULT_WAIT_TIME_MSECS,
-    timeoutMsg: errorMessage
-  });
+  await browser.waitUntil(
+    await until.textToBePresentInElement(element, text),
+    {
+      timeout: DEFAULT_WAIT_TIME_MSECS,
+      timeoutMsg: errorMessage
+    });
 };
 
 /**
@@ -99,7 +103,9 @@ var textToBePresentInElement = async function(element, text, errorMessage) {
  */
 var presenceOf = async function(element, errorMessage) {
   await element.waitForDisplayed({
-    timeout: DEFAULT_WAIT_TIME_MSECS, timeoutMsg: errorMessage, });
+    timeout: DEFAULT_WAIT_TIME_MSECS,
+    timeoutMsg: errorMessage
+  });
 };
 
 /**
@@ -109,7 +115,9 @@ var presenceOf = async function(element, errorMessage) {
  */
 var visibilityOf = async function(element, errorMessage) {
   await element.waitForExist({
-    timeout: DEFAULT_WAIT_TIME_MSECS, timeoutMsg: errorMessage, });
+    timeout: DEFAULT_WAIT_TIME_MSECS,
+    timeoutMsg: errorMessage
+  });
 };
 
 /**
