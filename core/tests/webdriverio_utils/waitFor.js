@@ -64,7 +64,7 @@ var elementToBeClickable = async function(element, errorMessage) {
  * @param {string} errorMessage - Error message when element is still visible.
  */
 var invisibilityOf = async function(element, errorMessage) {
-  await element.waitForExist({
+  await element.waitForDisplayed({
     timeout: DEFAULT_WAIT_TIME_MSECS,
     reverse: true,
     timeoutMsg: errorMessage
@@ -102,7 +102,7 @@ var textToBePresentInElement = async function(element, text, errorMessage) {
  * @param {string} errorMessage - Error message when element is not present.
  */
 var presenceOf = async function(element, errorMessage) {
-  await element.waitForDisplayed({
+  await element.waitForExist({
     timeout: DEFAULT_WAIT_TIME_MSECS,
     timeoutMsg: errorMessage
   });
@@ -114,7 +114,7 @@ var presenceOf = async function(element, errorMessage) {
  * @param {string} errorMessage - Error message when element is invisible.
  */
 var visibilityOf = async function(element, errorMessage) {
-  await element.waitForExist({
+  await element.waitForDisplayed({
     timeout: DEFAULT_WAIT_TIME_MSECS,
     timeoutMsg: errorMessage
   });
