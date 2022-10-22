@@ -404,6 +404,8 @@ var ExplorationEditorPage = function() {
 
   this.navigateToPreviewTab = async function() {
     await action.click('Preview tab button', navigateToPreviewTabButton);
+    // eslint-disable-next-line oppia/e2e-practices
+    await browser.pause(2000);
     await waitFor.pageToFullyLoad();
   };
 
