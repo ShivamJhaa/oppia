@@ -190,13 +190,11 @@ describe('Library index page', function() {
     // Private explorations are not shown in the library.
     await libraryPage.expectExplorationToBeHidden('Vilya');
 
-    await libraryPage.selectLanguages([LANGUAGE_DEUTSC]);
+    await libraryPage.deselectLanguages([LANGUAGE_ENGLISH]);
     await libraryPage.findExploration(EXPLORATION_VINGILOT);
     // The first letter of the objective is automatically capitalized.
     expect(await libraryPage.getExplorationObjective(EXPLORATION_VINGILOT))
       .toBe('Seek the aid of the Valar');
-    await libraryPage.deselectLanguages([LANGUAGE_DEUTSC]);
-    await libraryPage.selectLanguages([LANGUAGE_FRANCAI]);
     await libraryPage.findExploration(EXPLORATION_SILMARILS);
     await libraryPage.playExploration(EXPLORATION_SILMARILS);
     await explorationPlayerPage.expectExplorationNameToBe('silmarils');
