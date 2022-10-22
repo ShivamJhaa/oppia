@@ -190,6 +190,7 @@ describe('Library index page', function() {
     // Private explorations are not shown in the library.
     await libraryPage.expectExplorationToBeHidden('Vilya');
 
+    await libraryPage.selectLanguages([LANGUAGE_DEUTSC, LANGUAGE_FRANCAI]);
     await libraryPage.findExploration(EXPLORATION_VINGILOT);
     // The first letter of the objective is automatically capitalized.
     expect(await libraryPage.getExplorationObjective(EXPLORATION_VINGILOT))
