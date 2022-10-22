@@ -422,11 +422,12 @@ var MultiSelectEditor = function(elem) {
 
     var filteredElementsCount = 0;
     for (var i = 0; i < texts.length; i++) {
-      var filteredElement = elem.$(
+      var filteredElement = await elem.$(
         '.e2e-test-search-bar-dropdown-menu').$(`span=${texts[i]}`);
       if (await filteredElement.isExisting()) {
         filteredElementsCount += 1;
-        expect(await filteredElement.getAttribute('class')).toMatch(
+        expect(await action.getAttribute(
+          'Filetered Element', filteredElement, 'class')).toMatch(
           expectedClassBeforeToggle);
         await action.click('Filtered Element', filteredElement);
       }
