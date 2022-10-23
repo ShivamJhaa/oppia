@@ -172,7 +172,9 @@ describe('Library index page', function() {
     await libraryPage.deselectLanguages([LANGUAGE_ENGLISH]);
 
     for (var testCase of testCases) {
+
       await libraryPage.selectLanguages(testCase.languages);
+
       await libraryPage.selectCategories(testCase.categories);
 
       for (var explorationTitle in ALL_PUBLIC_EXPLORATION_TITLES) {
@@ -183,7 +185,9 @@ describe('Library index page', function() {
         }
       }
 
+
       await libraryPage.deselectLanguages(testCase.languages);
+
       await libraryPage.deselectCategories(testCase.categories);
     }
 

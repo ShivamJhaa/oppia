@@ -12,6 +12,9 @@ var args = process.argv;
 // eslint-disable-next-line eqeqeq
 var chromeVersion = (args[0] == 'DEBUG=true') ? args[6] : args[5];
 
+var chromedriverPath =
+'./node_modules/webdriver-manager/selenium/chromedriver_' + chromeVersion;
+
 const drivers = {
   chrome: { version: chromeVersion },
 };
@@ -271,13 +274,9 @@ exports.config = {
   // they don't add newcommands. Instead, they hook themselves up into
   // the test process.
   services: [
-    ['selenium-standalone', {
-      logPath: 'logs',
-      installArgs: { drivers },
-      args: { drivers }
-    }],
-    'intercept'
-  ],
+    ['chromedriver', {
+      chromedriverCustomPath: chromedriverPath
+    }]],
 
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
