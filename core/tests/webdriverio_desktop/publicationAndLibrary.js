@@ -172,10 +172,12 @@ describe('Library index page', function() {
     await libraryPage.deselectLanguages([LANGUAGE_ENGLISH]);
 
     for (var testCase of testCases) {
-      await browser.pause(1000);
-      await libraryPage.selectLanguages(testCase.languages);
-      await browser.pause(1000);
-      await libraryPage.selectCategories(testCase.categories);
+      if(testCase.languages.length > 0) {
+        await libraryPage.selectLanguages(testCase.languages);
+      }
+      if(testCase.categories.length > 0) {
+        await libraryPage.selectCategories(testCase.categories);
+      }
 
       for (var explorationTitle in ALL_PUBLIC_EXPLORATION_TITLES) {
         if (testCase.expectVisible.indexOf(explorationTitle) !== -1) {
@@ -185,10 +187,12 @@ describe('Library index page', function() {
         }
       }
 
-      await browser.pause(1000);
-      await libraryPage.deselectLanguages(testCase.languages);
-      await browser.pause(1000);
-      await libraryPage.deselectCategories(testCase.categories);
+      if(testCase.languages.length > 0) {
+        await libraryPage.deselectLanguages(testCase.languages);
+      }
+      if(testCase.categories.length > 0) {
+        await libraryPage.deselectCategories(testCase.categories);
+      }
     }
 
     // Private explorations are not shown in the library.
