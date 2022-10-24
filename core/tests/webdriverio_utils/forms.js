@@ -428,6 +428,7 @@ var MultiSelectEditor = function(elem) {
         filteredElementsCount += 1;
         expect(await filteredElement.getAttribute('class')).toMatch(
           expectedClassBeforeToggle);
+        await filteredElement.scrollIntoView();
         await action.click('Filtered Element', filteredElement);
       }
     }

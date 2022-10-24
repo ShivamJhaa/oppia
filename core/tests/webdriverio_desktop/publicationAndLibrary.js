@@ -137,11 +137,11 @@ describe('Library index page', function() {
       expectVisible: [EXPLORATION_SILMARILS, EXPLORATION_VINGILOT]
     }, {
       categories: [],
-      languages: [LANGUAGE_ENGLISH, LANGUAGE_FRANCAI],
+      languages: [LANGUAGE_FRANCAI],
       expectVisible: [EXPLORATION_VINGILOT]
     }, {
       categories: [],
-      languages: [LANGUAGE_ENGLISH, LANGUAGE_DEUTSC, LANGUAGE_FRANCAI],
+      languages: [LANGUAGE_DEUTSC, LANGUAGE_FRANCAI],
       expectVisible: [EXPLORATION_SILMARILS, EXPLORATION_VINGILOT]
     }, {
       categories: [CATEGORY_ARCHITECTURE],
@@ -170,6 +170,8 @@ describe('Library index page', function() {
 
     // Reset the language selector.
     await libraryPage.deselectLanguages([LANGUAGE_ENGLISH]);
+
+    await browser.pause(2000);
 
     for (var testCase of testCases) {
       await libraryPage.selectLanguages(testCase.languages);
