@@ -172,12 +172,8 @@ describe('Library index page', function() {
     await libraryPage.deselectLanguages([LANGUAGE_ENGLISH]);
 
     for (var testCase of testCases) {
-      if(testCase.languages.length > 0) {
-        await libraryPage.selectLanguages(testCase.languages);
-      }
-      if(testCase.categories.length > 0) {
-        await libraryPage.selectCategories(testCase.categories);
-      }
+      await libraryPage.selectLanguages(testCase.languages);
+      await libraryPage.selectCategories(testCase.categories);
 
       for (var explorationTitle in ALL_PUBLIC_EXPLORATION_TITLES) {
         if (testCase.expectVisible.indexOf(explorationTitle) !== -1) {
@@ -187,18 +183,13 @@ describe('Library index page', function() {
         }
       }
 
-      if(testCase.languages.length > 0) {
-        await libraryPage.deselectLanguages(testCase.languages);
-      }
-      if(testCase.categories.length > 0) {
-        await libraryPage.deselectCategories(testCase.categories);
-      }
+      await libraryPage.deselectLanguages(testCase.languages);
+      await libraryPage.deselectCategories(testCase.categories);
     }
 
     // Private explorations are not shown in the library.
     await libraryPage.expectExplorationToBeHidden('Vilya');
 
-    // await libraryPage.selectLanguages([LANGUAGE_DEUTSC, LANGUAGE_FRANCAI]);
     await libraryPage.findExploration(EXPLORATION_VINGILOT);
     // The first letter of the objective is automatically capitalized.
     expect(await libraryPage.getExplorationObjective(EXPLORATION_VINGILOT))
