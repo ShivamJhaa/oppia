@@ -99,6 +99,7 @@ export class ExplorationImprovementsService implements OnInit {
 
     return (
       this.improvementsTabIsAccessible &&
+      this.config &&
       this.config.improvementsTabIsEnabled);
   }
 
@@ -118,7 +119,7 @@ export class ExplorationImprovementsService implements OnInit {
       await this.explorationImprovementsBackendApiService
         .getConfigAsync(expId));
 
-    if (!this.config.improvementsTabIsEnabled) {
+    if (this.config && !this.config.improvementsTabIsEnabled) {
       return;
     }
 
