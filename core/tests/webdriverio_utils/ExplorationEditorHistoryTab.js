@@ -284,6 +284,7 @@ var ExplorationEditorHistoryTab = function() {
       'Revert version button', revertVersionButton);
     await action.click(
       'Confirm revert button', confirmRevertVersionButton);
+    await waitFor.pageToFullyLoad();
   };
 };
 
