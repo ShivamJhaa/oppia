@@ -672,7 +672,7 @@ describe('Exploration history', function() {
     await users.logout();
   });
 
-  it('should revert to old exploration commit', async function() {
+  fit('should revert to old exploration commit', async function() {
     await users.createUser('user2@historyTab.com', 'user2HistoryTab');
     await users.login('user2@historyTab.com');
     await workflow.createExploration(true);
@@ -725,6 +725,7 @@ describe('Exploration history', function() {
     // Revert to version 2.
     await explorationEditorPage.navigateToHistoryTab();
     await explorationEditorHistoryTab.revertToVersion(2);
+    await explorationEditorHistoryTab.expectRevertToVersion(2);
 
     // Verify exploration is version 2.
     await general.moveToPlayer();
