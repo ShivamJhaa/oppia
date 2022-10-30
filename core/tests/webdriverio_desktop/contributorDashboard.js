@@ -194,7 +194,7 @@ describe('Contributor dashboard page', function() {
     await explorationEditorSettingsTab.setObjective(
       'Dummy exploration for testing images'
     );
-    await explorationEditorPage.saveChanges();
+    await explorationEditorPage.saveChanges('Done!');
     await workflow.publishExploration();
     let dummyExplorationId = await general.getExplorationIdFromEditor();
 
