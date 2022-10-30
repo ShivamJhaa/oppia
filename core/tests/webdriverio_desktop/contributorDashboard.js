@@ -53,7 +53,11 @@ describe('Contributor dashboard page', function() {
     'Review Material 0',
     'Review Material 1'];
   const ADMIN_EMAIL = 'management@contributor.com';
-  const USER_EMAILS = ['user0@contributor.com', 'user1@contributor.com'];
+  const USER_EMAILS = [
+    'user0@contributor.com',
+    'user1@contributor.com',
+    'user2@contributor.com'
+  ];
   const QUESTION_ADMIN_EMAIL = 'user@contributor.com';
   const QUESTION_ADMIN_USERNAME = 'user4321';
   const GERMAN_LANGUAGE = 'Deutsch (German)';
@@ -86,6 +90,8 @@ describe('Contributor dashboard page', function() {
 
     await users.createUser(USER_EMAILS[0], 'user0');
     await users.createUser(USER_EMAILS[1], 'user1');
+    await users.createUserWithRole(
+      USER_EMAILS[2], 'user2', 'curriculum admin');
     await users.createUser(QUESTION_ADMIN_EMAIL, QUESTION_ADMIN_USERNAME);
 
     await users.createAndLoginCurriculumAdminUser(ADMIN_EMAIL, 'management');
@@ -161,7 +167,7 @@ describe('Contributor dashboard page', function() {
     let explorationEditorPage = new ExplorationEditorPage.
       ExplorationEditorPage();
 
-    await users.login(ADMIN_EMAIL);
+    await users.login(USER_EMAILS[2]);
 
     // Creating an exploration with an image.
     await creatorDashboardPage.get();

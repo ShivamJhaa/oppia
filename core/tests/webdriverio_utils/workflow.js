@@ -125,13 +125,13 @@ var publishExploration = async function() {
 
   let width = (await browser.getWindowSize()).width;
   if (width > 768) {
-    await waitFor.elementToBeClickable(publishButton);
-    await publishButton.isDisplayed();
+    await waitFor.elementToBeClickable(
+      publishButton,
+      'Publish button takes too long to be clickable');
     await action.click('Test Publish Exploration', publishButton);
   } else {
     var changesOptions = $('.e2e-test-mobile-changes-dropdown');
     await action.click('Changes options', changesOptions);
-    await publishButtonMobile.isDisplayed();
     await action.click('Publish button mobile', publishButtonMobile);
   }
 
