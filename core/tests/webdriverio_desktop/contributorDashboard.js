@@ -183,11 +183,11 @@ describe('Contributor dashboard page', function() {
       await action.click('Basic Settings', basicSettings);
     }
     await explorationEditorSettingsTab.setTitle('exp1');
+    await explorationEditorSettingsTab.setCategory('Algebra');
     await explorationEditorSettingsTab.setLanguage('English');
     await explorationEditorSettingsTab.setObjective(
       'Dummy exploration for testing images'
     );
-    await explorationEditorSettingsTab.setCategory('Algebra');
     await explorationEditorPage.saveChanges();
     await workflow.publishExploration();
     let dummyExplorationId = await general.getExplorationIdFromEditor();
