@@ -288,6 +288,8 @@ var ExplorationEditorHistoryTab = function() {
   };
 
   this.expectRevertToVersion = async function(version) {
+    await waitFor.numberOfElementsToBe(
+      '.e2e-test-history-table-message', 'History Table message', 4);
     await waitFor.textToBePresentInElement(
       historyTableMessage,
       'Reverted exploration to version ' + version,
