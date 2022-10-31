@@ -736,6 +736,8 @@ var ExplorationEditorMainTab = function() {
     }
     var parameterTypes = _getRuleParameterTypes(interactionId, ruleName);
     expect(parameterValues.length).toEqual(parameterTypes.length);
+    await waitFor.visibilityOf($(
+      '.e2e-test-answer-description-fragment'), 'Answer description fragement is not visible');
     var answerDescriptionFragment = await $$(
       '.e2e-test-answer-description-fragment');
     for (var i = 0; i < parameterValues.length; i++) {
