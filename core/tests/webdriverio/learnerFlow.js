@@ -224,6 +224,7 @@ describe('Learner dashboard functionality', function() {
     // able to leave the page directly without getting any alert message.
     var oppiaLogo = $('.e2e-test-oppia-main-logo');
     await action.click('Oppia logo', oppiaLogo);
+    await waitFor.pageToFullyLoad();
 
     // Go to 'Test Exploration'.
     await libraryPage.get();
