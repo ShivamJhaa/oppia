@@ -182,7 +182,7 @@ describe('Learner dashboard functionality', function() {
       await libraryPage.playCollection('Introduction to Collections in Oppia');
     });
 
-  it('should display incomplete and completed explorations', async function() {
+  fit('should display incomplete and completed explorations', async function() {
     await users.createAndLoginSuperAdminUser(
       'originalCreator@learnerDashboard.com', 'originalCreator');
     // Create or load explorations.
@@ -225,6 +225,7 @@ describe('Learner dashboard functionality', function() {
     var oppiaLogo = $('.e2e-test-oppia-main-logo');
     await action.click('Oppia logo', oppiaLogo);
     await waitFor.pageToFullyLoad();
+    await browser.debug();
 
     // Go to 'Test Exploration'.
     await libraryPage.get();
