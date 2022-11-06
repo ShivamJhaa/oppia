@@ -182,7 +182,7 @@ describe('Learner dashboard functionality', function() {
       await libraryPage.playCollection('Introduction to Collections in Oppia');
     });
 
-  fit('should display incomplete and completed explorations', async function() {
+  it('should display incomplete and completed explorations', async function() {
     await users.createAndLoginSuperAdminUser(
       'originalCreator@learnerDashboard.com', 'originalCreator');
     // Create or load explorations.
