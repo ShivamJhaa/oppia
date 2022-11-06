@@ -222,16 +222,14 @@ describe('Learner dashboard functionality', function() {
     }
     // User clicks on Oppia logo to leave exploration, user should be
     // able to leave the page directly without getting any alert message.
-    var oppiaLogo = $('.e2e-test-oppia-main-logo');
-    await action.click('Oppia logo', oppiaLogo);
-    await waitFor.pageToFullyLoad();
-    await browser.debug();
+    await libraryPage.getHomePage();
 
     // Go to 'Test Exploration'.
     await libraryPage.get();
     await libraryPage.findExploration('Test Exploration');
     await libraryPage.playExploration('Test Exploration');
     await waitFor.pageToFullyLoad();
+    var oppiaLogo = $('.e2e-test-oppia-main-logo');
     await action.click('Oppia logo', oppiaLogo);
     await waitFor.pageToFullyLoad();
     // Learner Dashboard should display 'Dummy Exploration'
